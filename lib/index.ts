@@ -1,4 +1,5 @@
 export * from './assert'
+export * from './brand'
 export * from './collectors'
 export * from './debounce'
 export * from './functions'
