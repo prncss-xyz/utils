@@ -1,6 +1,6 @@
 {
   "name": "@prncss-xyz/utils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/prncss-xyz/utils.git"
   },
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
