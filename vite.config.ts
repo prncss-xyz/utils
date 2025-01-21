@@ -1,23 +1,22 @@
 import { resolve } from 'path'
+import dts from 'vite-plugin-dts'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
 	build: {
+		copyPublicDir: false,
+		emptyOutDir: true,
 		lib: {
 			entry: resolve(__dirname, 'lib/index.ts'),
 			// the proper extensions will be added
 			fileName: 'index',
 			name: 'utils',
 		},
+		plugins: [dts()],
 		rollupOptions: {
 			external: ['@constellar/core'],
-			output: {
-				globals: {
-					vue: 'Vue',
-				},
-			},
 		},
-		sourcemap: true,
+    sourcemap: true,
 	},
 	test: {
 		coverage: {
