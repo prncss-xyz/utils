@@ -11,9 +11,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'packages/libs/core/**'
-      - 'packages/libs/jotai/**'
   workflow_dispatch:
 
 jobs:
