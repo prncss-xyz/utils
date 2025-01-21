@@ -1,4 +1,4 @@
-import { id } from "@constellar/core"
+import { id } from '@constellar/core'
 
 export function arrayForm<T>() {
 	return {
