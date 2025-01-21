@@ -2,6 +2,9 @@
   "name": "@prncss-xyz/utils",
   "version": "0.0.0",
   "type": "module",
+	"publishConfig": {
+		"access": "public"
+	},
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
