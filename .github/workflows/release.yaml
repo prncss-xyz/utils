@@ -26,7 +26,7 @@ jobs:
         run: pnpm run build
       - name: Check types
         run: pnpm test:types
-      - name: Publish @constellar/core
+      - name: Publish
         run: pnpm publish --no-git-checks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
