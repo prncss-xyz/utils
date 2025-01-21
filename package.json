@@ -1,6 +1,6 @@
 {
   "name": "utils",
-  "private": false,
+  "private": "false",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -32,6 +32,6 @@
     "nanoid": "^5.0.9"
   },
   "peerDependencies": {
-    "@constellar/core": "^2.4.2",
+    "@constellar/core": "^2.4.2"
   }
 }
