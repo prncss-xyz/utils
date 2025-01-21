@@ -46,3 +46,44 @@ export function asyncUpdater<Value>(
 		return isFunction(up) ? ((await up(last)) as undefined | Value) : up
 	}
 }
+
+export const mul = curry((a: number, b: number) => b * a)
+export const div = curry((a: number, b: number) => b / a)
+export function add(a = 1) {
+	return function (b: number) {
+		return b + a
+	}
+}
+export function sub(a = 1) {
+	return function (b: number) {
+		return b - a
+	}
+}
+export function lt(a = 0) {
+	return function (b: number) {
+		return b < a
+	}
+}
+export function lte(a = 0) {
+	return function (b: number) {
+		return b <= a
+	}
+}
+export function gt(a = 0) {
+	return function (b: number) {
+		return b > a
+	}
+}
+export function gte(a = 0) {
+	return function (b: number) {
+		return b >= a
+	}
+}
+export function constant<T>(a: T) {
+	return function () {
+		return a
+	}
+}
+export function not(a: unknown) {
+	return !a
+}

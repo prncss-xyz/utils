@@ -7,7 +7,7 @@ function cmp0<T>(a: T, b: T): number {
 export function maxForm<T>(cmp = cmp0<T>) {
 	return {
 		foldFn: (t: T, acc: T | undefined) =>
-			acc === undefined ? t : cmp(t, acc) > 0 ? t : acc,
+			acc === undefined || cmp(t, acc) > 0 ? t : acc,
 		init: () => undefined,
 	}
 }
@@ -15,7 +15,7 @@ export function maxForm<T>(cmp = cmp0<T>) {
 export function minForm<T>(cmp = cmp0<T>) {
 	return {
 		foldFn: (t: T, acc: T | undefined) =>
-			acc === undefined ? t : cmp(t, acc) < 0 ? t : acc,
+			acc === undefined || cmp(t, acc) < 0 ? t : acc,
 		init: () => undefined,
 	}
 }
