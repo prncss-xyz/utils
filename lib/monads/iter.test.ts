@@ -1,7 +1,7 @@
 import { asyncCollect, collect } from '../collectors/core'
 import { arrayForm } from '../collectors/misc'
-import { range } from '../iterators/'
-import { arr, asyncMulti, asyncPick, multi, pick, where } from './arr'
+import { range } from '../iterators'
+import { arr, asyncMulti, asyncPick, multi, pick, where } from './iter'
 
 describe('arr.chain', () => {
 	test(() => {

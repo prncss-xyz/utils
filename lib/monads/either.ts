@@ -58,8 +58,22 @@ export function eitherFactory<T extends PropertyKey, P extends PropertyKey>(
 				if (isMain(a)) return a[payload]
 				return fromInit(a, or)
 			}
+
+			function arr<A>(a: Monad<A>): A[] {
+				if (isMain(a)) return [a[payload]]
+				return []
+			}
+			function form<T>(o: Other) {
+				return {
+					foldFn: unit as (a: T, acc: Monad<T>) => Monad<T>,
+					init: () => o,
+				}
+			}
+
 			return {
+				arr,
 				chain,
+				form,
 				isMain,
 				isOther,
 				map,

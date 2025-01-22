@@ -26,10 +26,16 @@ function zero<A>(): Monad<A> {
 	return undefined
 }
 
+function toIter<A>(a: Monad<A>): A[] {
+	if (a === undefined) return []
+	return [a]
+}
+
 export const opt = {
 	chain,
 	map,
 	plus,
+	toIter,
 	unit,
 	zero,
 }
