@@ -21,3 +21,24 @@ export function merge<T extends object>(a: T, b?: Partial<T>): T {
 	}
 	return res
 }
+
+export function invert<K extends PropertyKey, V extends PropertyKey>(
+	o: Record<K, V>,
+): Record<V, K> {
+	const acc: any = {}
+	for (const [k, v] of Object.entries<any>(o)) {
+		acc[v as any] = k as any
+	}
+	return acc
+}
+
+export function invertMulti<K extends PropertyKey, V extends PropertyKey>(
+	o: Record<K, V>,
+): Record<V, K[]> {
+	const acc: any = {}
+	for (const [k, v] of Object.entries<V>(o)) {
+		acc[v as any] ??= [] as K[]
+		acc[v as any].push(k)
+	}
+	return acc
+}

@@ -41,3 +41,33 @@ export function productForm() {
 		init: () => 1,
 	}
 }
+
+export function lengthForm() {
+	return {
+		foldFn: (_t: unknown, acc: number) => acc + 1,
+		init: () => 0,
+	}
+}
+
+export function partitionForm<T>(predicate: (t: T) => unknown) {
+	return groupByForm((t: T) => (predicate(t) ? 'true' : 'false'))
+}
+
+export function groupByForm<P extends PropertyKey, T>(
+	keyFn: (t: T) => P | undefined,
+) {
+	const groups = {} as Record<P, T[]>
+	return {
+		foldFn: (t: T) => {
+			const key = keyFn(t)
+			if (key !== undefined) {
+				if (groups[key] === undefined) {
+					groups[key] = []
+				}
+				groups[key].push(t)
+			}
+			return groups
+		},
+		init: () => groups,
+	}
+}

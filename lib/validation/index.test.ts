@@ -8,7 +8,6 @@ import {
 	aString,
 	cond,
 	each,
-	lazy,
 	literal,
 	matcher,
 	option,
@@ -21,6 +20,7 @@ import {
 	useParser,
 	validateObject,
 } from '.'
+import { lazy } from '../functions'
 
 describe('patterns', () => {
 	test('literals', () => {

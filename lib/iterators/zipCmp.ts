@@ -2,7 +2,7 @@ function isFail<X>(x: null | undefined | X): x is null | undefined {
 	return x === undefined || x === null
 }
 
-export async function zipCmp<X, Y>(
+export async function zipCmpAsync<X, Y>(
 	xs: AsyncIterable<X>,
 	ys: AsyncIterable<Y>,
 	cmp: (x: X, y: Y) => number,

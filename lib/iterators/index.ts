@@ -1,2 +1,2 @@
-export * from './range'
+export * from './misc'
 export * from './zipCmp'

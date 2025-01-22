@@ -1,3 +1,4 @@
+export * from './arrays'
 export * from './assert'
 export * from './brand'
 export * from './collectors'

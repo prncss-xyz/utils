@@ -276,9 +276,3 @@ export function parseObject<M extends object, Parser extends AnyOParser<M>>(
 		return new Success<InferResult<M, Parser> | S>(res)
 	}
 }
-
-export function lazy<Args extends unknown[], R>(cb: (...args: Args) => R) {
-	return (...args: Args) => {
-		return cb(...args)
-	}
-}

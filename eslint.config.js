@@ -24,6 +24,8 @@ export default tseslint.config({
 			{
 				cspell: {
 					words: [
+						'errable',
+						'juxt',
 						'converger',
 						'dichotomic',
 						'constellar',

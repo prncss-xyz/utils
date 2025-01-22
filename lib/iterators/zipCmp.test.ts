@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { zipCmp } from './zipCmp'
+import { zipCmpAsync } from './zipCmp'
 
 function spy<X>() {
 	const res: [X, X][] = []
@@ -30,7 +30,7 @@ function cmp(a: number, b: number) {
 describe.skip('zipCmp', () => {
 	it('smaller', () => {
 		const [res, cb] = spy<number | undefined>()
-		zipCmp(fromArray([1, 2, 3])(), fromArray([1, 2, 4])(), cmp, cb)
+		zipCmpAsync(fromArray([1, 2, 3])(), fromArray([1, 2, 4])(), cmp, cb)
 		expect(res).toEqual([
 			[1, 1],
 			[2, 2],
@@ -40,7 +40,7 @@ describe.skip('zipCmp', () => {
 	})
 	it('greater', () => {
 		const [res, cb] = spy<number | undefined>()
-		zipCmp(fromArray([1, 2, 4])(), fromArray([1, 2, 3])(), cmp, cb)
+		zipCmpAsync(fromArray([1, 2, 4])(), fromArray([1, 2, 3])(), cmp, cb)
 		expect(res).toEqual([
 			[1, 1],
 			[2, 2],
@@ -50,7 +50,7 @@ describe.skip('zipCmp', () => {
 	})
 	it('shorter', () => {
 		const [res, cb] = spy<number | undefined>()
-		zipCmp(fromArray([1, 2])(), fromArray([1, 2, 3])(), cmp, cb)
+		zipCmpAsync(fromArray([1, 2])(), fromArray([1, 2, 3])(), cmp, cb)
 		expect(res).toEqual([
 			[1, 1],
 			[2, 2],
@@ -59,7 +59,7 @@ describe.skip('zipCmp', () => {
 	})
 	it('longer', () => {
 		const [res, cb] = spy<number | undefined>()
-		zipCmp(fromArray([1, 2, 3])(), fromArray([1, 2])(), cmp, cb)
+		zipCmpAsync(fromArray([1, 2, 3])(), fromArray([1, 2])(), cmp, cb)
 		expect(res).toEqual([
 			[1, 1],
 			[2, 2],
