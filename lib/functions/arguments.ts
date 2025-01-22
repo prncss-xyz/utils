@@ -26,8 +26,8 @@ type Rest<P extends unknown[], Q extends unknown[]> = P extends [
 		: never
 	: Q
 type Curry<Args extends unknown[], Res> = {
-	(...p: Args): Res
 	<PS extends Pre<Args>>(...p: PS): Curry<Rest<PS, Args>, Res>
+	(...p: Args): Res
 }
 
 export function curry<Args extends unknown[], Res>(
@@ -41,6 +41,29 @@ export function curry<Args extends unknown[], Res>(
 		return curry(function (...q) {
 			return (f as any)(...p, ...q)
 		}, n - p.length)
+	}
+}
+
+type Curried<F = unknown> = ((...args: any[]) => F) | F
+type UncurriedRes<F> = F extends (...a: any[]) => infer R ? UncurriedRes<R> : F
+type UncurriedArgs<F, Acc extends any[] = []> = F extends (
+	...args: infer A
+) => infer R
+	? UncurriedArgs<R, [...Acc, ...A]>
+	: Acc
+
+export function uncurry<F extends Curried>(f: F) {
+	return function (...args: UncurriedArgs<F>): UncurriedRes<F> {
+		while (true) {
+			if (!isFunction(f)) return f as any
+			assert(args.length <= (f as any).length)
+			const as = args.slice(0, (f as any).length)
+			args = args.slice((f as any).length) as any
+			f = (f as any)(...as)
+			if (args.length === 0) {
+				return f as any
+			}
+		}
 	}
 }
 

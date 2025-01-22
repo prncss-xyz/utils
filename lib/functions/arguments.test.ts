@@ -1,6 +1,19 @@
 import { focus, prop } from '@constellar/core'
 
-import { bindWith, curry, flip, fromInit, Init } from '.'
+import { bindWith, curry, flip, fromInit, Init, sub, uncurry } from '.'
+
+describe('uncurry', () => {
+	test(() => {
+		const x = (x: number, y: number) => (z: string) => (w: boolean) =>
+			x + y + z.length + (w ? 1 : 0)
+		const u = uncurry(x)
+		expect(u(1, 2, 'four', true)).toBe(8)
+	})
+	test(() => {
+		const u = uncurry(sub)
+		expect(u(1, 2)).toBe(1)
+	})
+})
 
 describe('fromInit', () => {
 	type I = Init<number, [number, string]>

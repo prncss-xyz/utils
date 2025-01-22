@@ -26,6 +26,8 @@ export default tseslint.config({
 					words: [
 						'errable',
 						'juxt',
+						'uncurry',
+						'uncurried',
 						'converger',
 						'dichotomic',
 						'constellar',
