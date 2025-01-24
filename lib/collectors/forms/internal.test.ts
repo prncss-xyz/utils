@@ -1,4 +1,4 @@
-import { sortedAdd } from "./internal"
+import { sortedAdd } from './internal'
 
 describe('sortedAdd', () => {
 	const add = sortedAdd<number>((a, b) => a - b)

@@ -56,7 +56,6 @@ export function uncurry<F extends Curried>(f: F) {
 	return function (...args: UncurriedArgs<F>): UncurriedRes<F> {
 		while (true) {
 			if (!isFunction(f)) return f as any
-			assert(args.length <= (f as any).length)
 			const as = args.slice(0, (f as any).length)
 			args = args.slice((f as any).length) as any
 			f = (f as any)(...as)
@@ -65,18 +64,6 @@ export function uncurry<F extends Curried>(f: F) {
 			}
 		}
 	}
-}
-
-export function bindWith<
-	Method extends PropertyKey,
-	Obj extends { [Key in Method]: (...args: any) => unknown },
->(obj: Obj, method: Method, n?: number) {
-	const bound = obj[method].bind(obj)
-	return curry(function (
-		...args: Parameters<Obj[Method]>
-	): ReturnType<Obj[Method]> {
-		return bound(...args) as any
-	}, n ?? bound.length)
 }
 
 export function flip<A, B, Args extends any[], R>(

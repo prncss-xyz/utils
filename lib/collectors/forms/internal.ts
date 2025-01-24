@@ -1,4 +1,4 @@
-import { isoAssert } from '../assert'
+import { isoAssert } from '../../assert'
 
 // TODO: use dichotomic search
 export function sortedAdd<T>(cmp: (a: T, b: T) => number) {

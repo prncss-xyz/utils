@@ -1,4 +1,4 @@
-import { bindWith, curry } from './arguments'
+import { curry } from './arguments'
 
 export const mul = curry((a: number, b: number) => b * a)
 export const div = curry((a: number, b: number) => b / a)
@@ -13,7 +13,6 @@ export const neq = curry((a: number, b: number) => !Object.is(b, a))
 export const and = curry((a: unknown, b: unknown) => b && a)
 export const or = curry((a: unknown, b: undefined) => b || a)
 export const xor = curry((a: unknown, b: unknown) => (b && !a) || (!b && a))
-export const has = bindWith(Object, 'hasOwnProperty')
 export const iDiv = curry((a: number, b: number) => Math.floor(b / a))
 export function always<T>(a: T) {
 	return function () {
@@ -33,3 +32,13 @@ export const modulo = curry((a: number, b: number) => {
 export const clamp = curry((min: number, max: number, source: number) => {
 	return Math.max(Math.min(source, max), min)
 })
+
+export function tuple<const Args extends unknown[]>(...args: Args) {
+	return args
+}
+
+export function eqWith<A, B>(m: (a: A) => B) {
+	return function (a: A, b: A) {
+		return Object.is(m(a), m(b))
+	}
+}

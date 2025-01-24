@@ -1,10 +1,10 @@
+import { arrayFormDest } from '../collectors'
 import { asyncCollect, collect } from '../collectors/core'
-import { arrayForm } from '../collectors/misc'
 import { range } from '../iterators'
 import { arr, asyncMulti, asyncPick, multi, pick, where } from './iter'
 
 describe('arr.chain', () => {
-	test(() => {
+	test('', () => {
 		function m(n: number) {
 			return range(0, n)
 		}
@@ -24,7 +24,7 @@ describe('do notation', () => {
 				return [a, b, c] as const
 			})
 		}
-		const res = collect(arrayForm())(rightTriangles(10))
+		const res = collect(rightTriangles(10))(arrayFormDest())
 		expect(res).toEqual([
 			[4, 3, 5],
 			[8, 6, 10],
@@ -48,7 +48,7 @@ describe('async', () => {
 				return [a, b, c] as const
 			})
 		}
-		const res = await asyncCollect(arrayForm())(rightTriangles(10))
+		const res = await asyncCollect(rightTriangles(10))(arrayFormDest())
 		expect(res).toEqual([
 			[4, 3, 5],
 			[8, 6, 10],

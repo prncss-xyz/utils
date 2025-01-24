@@ -1,11 +1,11 @@
-import { add, converge, juxt, lt, report, sub, thrush, uncurry } from '.'
+import { add, converge, juxt, lt, report, sub, thrush, tuple } from '.'
 
 describe('converge', () => {
-	test(() => {
+	test('with converger', () => {
 		const t = converge(
 			(x: number, y: number, z: string) => x + y + z.length,
-			uncurry(sub),
-		)((x, y) => [x, y] as const)
+			(x, y) => y - x,
+		)(tuple)
 		expect(t(3, 4, 'four')).toEqual([11, 1])
 	})
 })
@@ -18,19 +18,18 @@ describe('juxt', () => {
 })
 
 describe('thrush', () => {
-	test(() => {
+	test('', () => {
 		const t = thrush(3)
 		expect(t(sub(1))).toEqual(2)
 	})
 })
 
 describe('report', () => {
-	test(() => {
+	test('', () => {
 		const t = report<number>()({
 			add: add(1),
 			lt: lt(2),
 		})
-		expect(true).toBe(false)
-		expect(t(0)).toEqual({ add: 1, sub: true })
+		expect(t(0)).toEqual({ add: 1, lt: true })
 	})
 })
