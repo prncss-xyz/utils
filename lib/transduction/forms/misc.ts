@@ -1,7 +1,7 @@
 import { id } from '@constellar/core'
 
 import { always } from '../../functions'
-import { FoldForm } from '../core'
+import { FoldForm } from '../collectables'
 
 export function valueForm<T, Ctx>(): FoldForm<
 	T,

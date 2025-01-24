@@ -26,13 +26,12 @@ export function* untilFixPoint<T>(step: (t: T) => T, init: T) {
 	}
 }
 
-export function* unfold<T, Acc>({
-	init,
-	step,
-}: {
+export interface UnfoldForm<T, Acc, Index = void> {
 	init: Acc
-	step: (acc: Acc) => [T, Acc] | undefined
-}) {
+	step: (acc: Acc) => [T, Acc, Index] | undefined
+}
+
+export function* unfold<T, Acc>({ init, step }: UnfoldForm<T, Acc>) {
 	while (true) {
 		const next = step(init)
 		if (next === undefined) return

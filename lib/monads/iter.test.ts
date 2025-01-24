@@ -1,6 +1,5 @@
-import { arrayFormDest } from '../collectors'
-import { asyncCollect, collect } from '../collectors/core'
 import { range } from '../iterators'
+import { arrayFormDest, asyncCollect, collect } from '../transduction'
 import { arr, asyncMulti, asyncPick, multi, pick, where } from './iter'
 
 describe('arr.chain', () => {

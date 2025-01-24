@@ -1,4 +1,4 @@
-import { ResolvedTransducer, Transducer } from '../core'
+import { ResolvedTransducer, Transducer } from '../collectables'
 
 export function filter<A, Ctx extends { index: unknown }>(
 	cond: (a: A, index: Ctx['index']) => unknown,

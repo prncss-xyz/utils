@@ -1,4 +1,4 @@
-import { FoldForm, ResolvedTransducer, Transducer } from '../core'
+import { FoldForm, ResolvedTransducer, Transducer } from '../collectables'
 import { arrayForm } from '../forms'
 
 export function scan<R, Acc, Ctx, T>(

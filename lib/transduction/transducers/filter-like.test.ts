@@ -1,6 +1,6 @@
 import { eq, lt, modulo } from '../../functions'
 import { range } from '../../iterators'
-import { collect } from '../core'
+import { collect } from '../collectables/iterables'
 import { arrayFormDest } from '../forms'
 import {
 	drop,

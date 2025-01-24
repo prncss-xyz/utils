@@ -1,7 +1,7 @@
 import { id } from '@constellar/core'
 
-import { arrayForm, collect } from '../collectors'
 import { add, lt } from '../functions'
+import { arrayForm, collect } from '../transduction'
 import { loop } from './misc'
 
 describe('loop', () => {

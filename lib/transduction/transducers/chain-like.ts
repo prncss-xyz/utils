@@ -1,4 +1,4 @@
-import { ResolvedTransducer, Transducer } from '../core'
+import { ResolvedTransducer, Transducer } from '../collectables'
 
 export function chain<A, B, Ctx extends { index: unknown }>(
 	mod: (a: A, index: Ctx['index']) => B[],

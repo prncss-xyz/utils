@@ -1,8 +1,8 @@
 import { pipe } from '@constellar/core'
 
 import { range } from '../../iterators'
-import { collect } from '../core'
-import { arrayForm } from '../forms'
+import { collect } from '../collectables/iterables'
+import { arrayFormDest } from '../forms'
 import { chain, flatten } from './chain-like'
 import { map } from './map-like'
 
@@ -11,7 +11,7 @@ describe('chain', () => {
 		const res = collect(
 			range(0, 4),
 			chain((x) => [x, x * 2]),
-		)(arrayForm())
+		)(arrayFormDest())
 		expect(res).toEqual([0, 0, 1, 2, 2, 4, 3, 6])
 	})
 })
@@ -24,7 +24,7 @@ describe('flatten', () => {
 				map((x) => [x, x]),
 				flatten(),
 			),
-		)(arrayForm())
+		)(arrayFormDest())
 		expect(res).toEqual([0, 0, 1, 1, 2, 2, 3, 3])
 	})
 })

@@ -2,10 +2,9 @@ import { pipe } from '@constellar/core'
 
 import { add, mul, sub } from '../../functions'
 import { range, times } from '../../iterators'
-import { collect } from '../core'
+import { collect } from '../collectables/iterables'
 import { arrayFormDest } from '../forms'
 import { ap, map } from './map-like'
-import { scan } from './scan-like'
 
 describe('map', () => {
 	test('simple', () => {

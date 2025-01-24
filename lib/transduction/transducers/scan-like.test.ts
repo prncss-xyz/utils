@@ -1,6 +1,6 @@
 import { eqWith, iDiv, modulo } from '../../functions'
 import { range } from '../../iterators'
-import { collect } from '../core'
+import { collect } from '../collectables/iterables'
 import { arrayForm, arrayFormDest, sumForm } from '../forms'
 import { group, scan } from './scan-like'
 
