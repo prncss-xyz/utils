@@ -2,27 +2,23 @@ import { id, isFunction } from '@constellar/core'
 
 import { BaseCtx, eqForm, EqForm, FoldForm, ResolvedTransducer } from './core'
 
-type Observer<V, F> =
+export type Observer<V, F> =
 	| ((value: V) => void)
-	| {
+	| Partial<{
 			complete(final: F): void
 			next(value: V): void
-	  }
+	  }>
 
 function normalizeObserver<V, F>(observer: Observer<V, F>) {
 	if (isFunction(observer)) return { complete() {}, next: observer }
-	return observer
+	return {
+		complete: observer.complete ?? (() => {}),
+		next: observer.next ?? (() => {}),
+	}
 }
 
 export function collectObservable<S>() {
 	return function <AccForm, RForm, T = S>(
-		f: (
-			f: EqForm<S, BaseCtx<number, Observer<AccForm, RForm>>>,
-		) => ResolvedTransducer<
-			S,
-			T,
-			BaseCtx<number, Observer<AccForm, RForm>>
-		> = id<any>,
 		observer: Observer<AccForm, RForm>,
 		form: FoldForm<
 			T,
@@ -30,6 +26,13 @@ export function collectObservable<S>() {
 			RForm,
 			BaseCtx<number, Observer<AccForm, RForm>>
 		>,
+		f: (
+			f: EqForm<S, BaseCtx<number, Observer<AccForm, RForm>>>,
+		) => ResolvedTransducer<
+			S,
+			T,
+			BaseCtx<number, Observer<AccForm, RForm>>
+		> = id as any,
 	) {
 		let done = false
 		const ctx = {
@@ -53,6 +56,7 @@ export function collectObservable<S>() {
 		}
 		function close() {
 			done = true
+			if (done) o.complete(result(acc, ctx))
 		}
 		return { close, next }
 	}
