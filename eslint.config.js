@@ -24,6 +24,7 @@ export default tseslint.config({
 			{
 				cspell: {
 					words: [
+						'unfoldable',
 						'errable',
 						'juxt',
 						'uncurry',
@@ -71,6 +72,6 @@ export default tseslint.config({
 		'perfectionist/sort-switch-case': perf,
 		'perfectionist/sort-union-types': perf,
 		'perfectionist/sort-variable-declarations': perf,
-		'prefer-const': 'warn',
+		'prefer-const': 'off',
 	},
 })

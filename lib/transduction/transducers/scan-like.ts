@@ -15,7 +15,7 @@ export function scan<R, Acc, Ctx, T>(
 				foldFn(next, acc, ctx) {
 					innerCtx ??= { ...ctx, index: 0 }
 					innerAcc = form.foldFn(next, innerAcc, innerCtx)
-					const a = foldFn(form.result(innerAcc), acc, ctx)
+					const a = foldFn(form.result(innerAcc, innerCtx), acc, ctx)
 					innerCtx.index++
 					return a
 				},
@@ -44,18 +44,16 @@ export function group<T, R, Acc, Ctx>(
 			let innerAcc = form.init()
 			let last: T | undefined
 			let innerCtx: Ctx & { index: number }
-			let getResult: (acc: any) => any
 			return p({
 				foldFn(next, acc, ctx) {
 					innerCtx ??= { ...ctx, index: 0 }
-					getResult ??= (acc) => result(foldFn(form.result(innerAcc), acc, ctx))
 					if (last === undefined || eq(next, last, ctx)) {
 						innerAcc = form.foldFn(next, innerAcc, innerCtx)
 						innerCtx.index++
 						last = next
 						return acc
 					}
-					const res = form.result(innerAcc)
+					const res = form.result(innerAcc, innerCtx)
 					innerCtx.index = 0
 					innerAcc = form.init()
 					innerAcc = form.foldFn(next, innerAcc, innerCtx)
@@ -63,9 +61,11 @@ export function group<T, R, Acc, Ctx>(
 					last = next
 					return foldFn(res, acc, ctx)
 				},
-				result(acc) {
-					if (innerCtx) return result(getResult(acc))
-					return result(acc)
+				result(acc, ctx) {
+					return result(
+						innerCtx ? foldFn(form.result(innerAcc, innerCtx), acc, ctx) : acc,
+						ctx,
+					)
 				},
 			})
 		}

@@ -8,16 +8,17 @@ export type ResolvedTransducer<S, T, Ctx> = <AccForm, RForm>(
 
 export interface PreFoldForm<T, Acc, R, Ctx> {
 	foldFn: (t: T, acc: Acc, ctx: Ctx) => Acc
-	result: (acc: Acc) => R
+	result: (acc: Acc, ctx: Ctx) => R
 }
 
 export interface FoldForm<T, Acc, R, Ctx> extends PreFoldForm<T, Acc, R, Ctx> {
 	init: () => Acc
 }
 
-export type BaseCtx<Index = void> = {
+export type BaseCtx<Index, UnAcc> = {
 	close: () => void
 	index: Index
+	unAcc: UnAcc
 }
 
 export type EqForm<S, Ctx> = ResolvedTransducer<S, S, Ctx>

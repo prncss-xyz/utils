@@ -14,15 +14,22 @@ function normalizeObserver<V, F>(observer: Observer<V, F>) {
 	return observer
 }
 
-export type ObservableCtx = BaseCtx<number> & {}
-
 export function collectObservable<S>() {
 	return function <AccForm, RForm, T = S>(
 		f: (
-			f: EqForm<S, ObservableCtx>,
-		) => ResolvedTransducer<S, T, ObservableCtx> = id<any>,
+			f: EqForm<S, BaseCtx<number, Observer<AccForm, RForm>>>,
+		) => ResolvedTransducer<
+			S,
+			T,
+			BaseCtx<number, Observer<AccForm, RForm>>
+		> = id<any>,
 		observer: Observer<AccForm, RForm>,
-		form: FoldForm<T, AccForm, RForm, ObservableCtx>,
+		form: FoldForm<
+			T,
+			AccForm,
+			RForm,
+			BaseCtx<number, Observer<AccForm, RForm>>
+		>,
 	) {
 		let done = false
 		const ctx = {
@@ -31,16 +38,18 @@ export function collectObservable<S>() {
 			},
 			index: 0,
 			next,
+			unAcc: observer,
 		}
 		const o = normalizeObserver(observer)
-		const { foldFn, result } = f(eqForm<S, ObservableCtx>())(form)
+		const { foldFn, result } =
+			f(eqForm<S, BaseCtx<number, Observer<AccForm, RForm>>>())(form)
 		let acc = form.init()
 		function next(item: S) {
 			if (done) return
 			ctx.index = Date.now()
 			acc = foldFn(item, acc, ctx)
 			o.next(acc)
-			if (done) o.complete(result(acc))
+			if (done) o.complete(result(acc, ctx))
 		}
 		function close() {
 			done = true

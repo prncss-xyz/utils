@@ -1,20 +1,20 @@
-import { ResolvedTransducer, Transducer } from '../collectables'
+import { BaseCtx, ResolvedTransducer, Transducer } from '../collectables'
 
-export function filter<A, Ctx extends { index: unknown }>(
-	cond: (a: A, index: Ctx['index']) => unknown,
+export function filter<A, Ctx extends BaseCtx<unknown, unknown>>(
+	cond: (a: A, index: Ctx['index'], source: Ctx['unAcc']) => unknown,
 ): Transducer<Ctx, A, A> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
 		return function ({ foldFn, result }) {
 			return p({
 				foldFn: (t, acc, ctx) =>
-					cond(t, ctx.index) ? foldFn(t, acc, ctx) : acc,
+					cond(t, ctx.index, ctx.unAcc) ? foldFn(t, acc, ctx) : acc,
 				result,
 			})
 		}
 	}
 }
 
-export function take<A, Ctx extends { close: () => void; index: unknown }>(
+export function take<A, Ctx extends BaseCtx<unknown, unknown>>(
 	n: number,
 ): Transducer<Ctx, A, A> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
@@ -32,14 +32,14 @@ export function take<A, Ctx extends { close: () => void; index: unknown }>(
 	}
 }
 
-export function takeWhile<A, Ctx extends { close: () => void; index: unknown }>(
-	cond: (a: A, index: Ctx['index']) => unknown,
+export function takeWhile<A, Ctx extends BaseCtx<unknown, unknown>>(
+	cond: (a: A, index: Ctx['index'], source: Ctx['unAcc']) => unknown,
 ): Transducer<Ctx, A, A> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
 		return function ({ foldFn, result }) {
 			return p({
 				foldFn(t, acc, ctx) {
-					if (cond(t, ctx.index)) return foldFn(t, acc, ctx)
+					if (cond(t, ctx.index, ctx.unAcc)) return foldFn(t, acc, ctx)
 					ctx.close()
 					return acc
 				},
@@ -50,14 +50,14 @@ export function takeWhile<A, Ctx extends { close: () => void; index: unknown }>(
 }
 
 // aka find
-export function takeUntil<A, Ctx extends { close: () => void; index: unknown }>(
-	cond: (a: A, index: Ctx['index']) => unknown,
+export function takeUntil<A, Ctx extends BaseCtx<unknown, unknown>>(
+	cond: (a: A, index: Ctx['index'], source: Ctx['unAcc']) => unknown,
 ): Transducer<Ctx, A, A> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
 		return function ({ foldFn, result }) {
 			return p({
 				foldFn(t, acc, ctx) {
-					if (cond(t, ctx.index)) ctx.close()
+					if (cond(t, ctx.index, ctx.unAcc)) ctx.close()
 					return foldFn(t, acc, ctx)
 				},
 				result,
@@ -66,7 +66,7 @@ export function takeUntil<A, Ctx extends { close: () => void; index: unknown }>(
 	}
 }
 
-export function drop<A, Ctx extends { close: () => void; index: unknown }>(
+export function drop<A, Ctx extends BaseCtx<unknown, unknown>>(
 	n: number,
 ): Transducer<Ctx, A, A> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
@@ -84,7 +84,7 @@ export function drop<A, Ctx extends { close: () => void; index: unknown }>(
 		}
 	}
 }
-export function dropWith<A, Ctx extends { close: () => void; index: unknown }>(
+export function dropWith<A, Ctx extends BaseCtx<unknown, unknown>>(
 	eq: (next: A, last: A, index: Ctx['index']) => unknown = Object.is,
 ): Transducer<Ctx, A, A> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
@@ -106,15 +106,15 @@ export function dropWith<A, Ctx extends { close: () => void; index: unknown }>(
 	}
 }
 
-export function dropWhile<A, Ctx extends { close: () => void; index: unknown }>(
-	cond: (a: A, index: Ctx['index']) => unknown,
+export function dropWhile<A, Ctx extends BaseCtx<unknown, unknown>>(
+	cond: (a: A, index: Ctx['index'], source: Ctx['unAcc']) => unknown,
 ): Transducer<Ctx, A, A> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
 		return function ({ foldFn, result }) {
 			let open = false
 			return p({
 				foldFn(t, acc, ctx) {
-					open ||= !cond(t, ctx.index)
+					open ||= !cond(t, ctx.index, ctx.unAcc)
 					if (open) return foldFn(t, acc, ctx)
 					return acc
 				},
@@ -124,8 +124,8 @@ export function dropWhile<A, Ctx extends { close: () => void; index: unknown }>(
 	}
 }
 
-export function dropUntil<A, Ctx extends { close: () => void; index: unknown }>(
-	cond: (a: A, index: Ctx['index']) => unknown,
+export function dropUntil<A, Ctx extends BaseCtx<unknown, unknown>>(
+	cond: (a: A, index: Ctx['index'], source: Ctx['unAcc']) => unknown,
 ): Transducer<Ctx, A, A> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
 		return function ({ foldFn, result }) {
@@ -133,7 +133,7 @@ export function dropUntil<A, Ctx extends { close: () => void; index: unknown }>(
 			return p({
 				foldFn(t, acc, ctx) {
 					if (fulfilled) return foldFn(t, acc, ctx)
-					if (cond(t, ctx.index)) fulfilled = true
+					if (cond(t, ctx.index, ctx.unAcc)) fulfilled = true
 					return acc
 				},
 				result,
