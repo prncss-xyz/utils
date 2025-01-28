@@ -1,9 +1,8 @@
 import { focus, Focus, isUndefined, PRISM, REMOVE } from '@constellar/core'
 
-import { symmetricDiff } from './arrays'
 import { isoAssert } from './assert'
 import { fromInit, Init } from './functions'
-import { insertValue, removeValue } from './functions/arrays'
+import { insertValue, removeValue, symmetricDiff } from './functions/arrays'
 
 export type NonRemove<T> = T extends typeof REMOVE ? never : T
 

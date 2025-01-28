@@ -38,3 +38,10 @@ export function removeValues<X>(elements: X[]) {
 		return dirty ? res : xs
 	}
 }
+
+export function symmetricDiff<X>(a: X[], b: X[]) {
+	return [
+		a.filter((x) => !b.includes(x)),
+		b.filter((x) => !a.includes(x)),
+	] as const
+}
