@@ -31,10 +31,18 @@ function toIter<A>(a: Monad<A>): A[] {
 	return [a]
 }
 
+function tapZero<T>(f: () => void) {
+	return function (x: T | undefined) {
+		if (x === undefined) f()
+		return x
+	}
+}
+
 export const opt = {
 	chain,
 	map,
 	plus,
+	tapZero,
 	toIter,
 	unit,
 	zero,
