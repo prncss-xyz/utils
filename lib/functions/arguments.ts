@@ -30,6 +30,10 @@ type Curry<Args extends unknown[], Res> = {
 	(...p: Args): Res
 }
 
+/**
+ * Curry a function. If the function has optional or variadic arguments, you need to specify the number of arguments through the `n` parameter.
+ * Will not preserve the type of generic functions.
+ */
 export function curry<Args extends unknown[], Res>(
 	f: (...args: Args) => Res,
 	n = f.length,
