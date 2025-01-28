@@ -1,3 +1,22 @@
+function cmp0<T>(a: T, b: T): number {
+	return a < b ? -1 : a > b ? 1 : 0
+}
+
+export function insertCmp<T>(cmp = cmp0) {
+	return function (t: T) {
+		return function (acc: T[]) {
+			for (let i = 0; i < acc.length; i++) {
+				const v = acc[i]!
+				const r = cmp(v, t)
+				if (r < 0) continue
+				if (r === 0) return acc
+				if (r > 0) return acc.slice(0, i).concat([t], acc.slice(i))
+			}
+			return acc.concat(t)
+		}
+	}
+}
+
 export function insertValue<X>(element: X) {
 	let dirty = true
 	function p(x: X) {
