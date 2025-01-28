@@ -8,7 +8,7 @@ export default defineConfig({
 		lib: {
 			entry: 'lib/index.ts',
 			fileName: 'index',
-			formats: ['es'],
+			formats: ['es', 'cjs'],
 			name: 'utils',
 		},
 		rollupOptions: {
@@ -19,8 +19,8 @@ export default defineConfig({
 	plugins: [dts()],
 	test: {
 		coverage: {
-			exclude: ['src/index.ts', 'src/**/*.test.{js,ts,jsx,tsx}'],
-			include: ['src/**/*.{js,ts,jsx,tsx}'],
+			exclude: ['lib/index.ts', 'lib/**/*.test.{js,ts,jsx,tsx}'],
+			include: ['lib/**/*.{js,ts,jsx,tsx}'],
 			provider: 'v8',
 			reporter: ['text', 'json', 'clover', 'lcov'],
 		},
