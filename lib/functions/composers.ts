@@ -1,5 +1,3 @@
-import { Prettify } from '@constellar/core'
-
 /**
  * Apply a list of arguments to a list of functions (branches) and merge the results with a converging function.
  */

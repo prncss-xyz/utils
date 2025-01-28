@@ -1,6 +1,5 @@
 import { range } from '../iterators'
-import { arraySinkDest } from '../transducers'
-import { asyncCollect, collect } from '../transducers/transductions'
+import { arraySinkDest, asyncCollect, collect } from '../transducers'
 import { arr, asyncMulti, asyncPick, multi, pick, where } from './iter'
 
 describe('arr.chain', () => {

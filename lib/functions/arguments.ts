@@ -25,7 +25,7 @@ type Rest<P extends unknown[], Q extends unknown[]> = P extends [
 			: never
 		: never
 	: Q
-type Curry<Args extends unknown[], Res> = {
+export type Curry<Args extends unknown[], Res> = {
 	<PS extends Pre<Args>>(...p: PS): Curry<Rest<PS, Args>, Res>
 	(...p: Args): Res
 }

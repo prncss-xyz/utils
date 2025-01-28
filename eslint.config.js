@@ -7,7 +7,10 @@ import tseslint from 'typescript-eslint'
 const perf = ['warn', { type: 'natural' }]
 
 export default tseslint.config({
-	extends: [js.configs.recommended, ...tseslint.configs.recommended],
+	extends: [
+		js.configs.recommended,
+		...tseslint.configs.recommended,
+	],
 	files: ['**/*.{js,jsx,ts,tsx}'],
 	ignores: ['**/dist/**', '**/coverage/**'],
 	languageOptions: {
