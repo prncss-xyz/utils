@@ -1,9 +1,9 @@
 import { id } from '@constellar/core'
 
 import { always } from '../../functions'
-import { FoldForm } from '../collectables'
+import { FoldForm } from '../transductions'
 
-export function valueForm<T, Ctx>(): FoldForm<
+export function valueSink<T, Ctx>(): FoldForm<
 	T,
 	T | undefined,
 	T | undefined,
@@ -16,7 +16,7 @@ export function valueForm<T, Ctx>(): FoldForm<
 	}
 }
 
-export function arrayFormDest<T, Ctx>(): FoldForm<T, T[], T[], Ctx> {
+export function arraySinkDest<T, Ctx>(): FoldForm<T, T[], T[], Ctx> {
 	return {
 		foldFn: (t, acc) => (acc.push(t), acc),
 		init: () => [],
@@ -24,7 +24,7 @@ export function arrayFormDest<T, Ctx>(): FoldForm<T, T[], T[], Ctx> {
 	}
 }
 
-export function arrayForm<T, Ctx>(): FoldForm<T, T[], T[], Ctx> {
+export function arraySink<T, Ctx>(): FoldForm<T, T[], T[], Ctx> {
 	return {
 		foldFn: (t, acc) => [...acc, t],
 		init: () => [],
@@ -32,7 +32,7 @@ export function arrayForm<T, Ctx>(): FoldForm<T, T[], T[], Ctx> {
 	}
 }
 
-export function sumForm<Ctx>(): FoldForm<number, number, number, Ctx> {
+export function sumSink<Ctx>(): FoldForm<number, number, number, Ctx> {
 	return {
 		foldFn: (t, acc) => acc + t,
 		init: () => 0,
@@ -40,7 +40,7 @@ export function sumForm<Ctx>(): FoldForm<number, number, number, Ctx> {
 	}
 }
 
-export function productForm<Ctx>(): FoldForm<number, number, number, Ctx> {
+export function productSink<Ctx>(): FoldForm<number, number, number, Ctx> {
 	return {
 		foldFn: (t, acc) => acc * t,
 		init: () => 1,
@@ -48,7 +48,7 @@ export function productForm<Ctx>(): FoldForm<number, number, number, Ctx> {
 	}
 }
 
-export function lengthForm<Ctx>(): FoldForm<unknown, number, number, Ctx> {
+export function lengthSink<Ctx>(): FoldForm<unknown, number, number, Ctx> {
 	return {
 		foldFn: (_t, acc) => acc + 1,
 		init: () => 0,
@@ -56,7 +56,7 @@ export function lengthForm<Ctx>(): FoldForm<unknown, number, number, Ctx> {
 	}
 }
 
-export function groupByForm<P extends PropertyKey, T, Ctx>(
+export function groupBySink<P extends PropertyKey, T, Ctx>(
 	keyFn: (t: T) => P | undefined,
 ): FoldForm<T, Record<P, T[]>, Record<P, T[]>, Ctx> {
 	const groups = {} as Record<P, T[]>
@@ -76,13 +76,13 @@ export function groupByForm<P extends PropertyKey, T, Ctx>(
 	}
 }
 
-export function partitionForm<T, Ctx>(predicate: (t: T) => unknown) {
-	return groupByForm<'false' | 'true', T, Ctx>((t: T) =>
+export function partitionSink<T, Ctx>(predicate: (t: T) => unknown) {
+	return groupBySink<'false' | 'true', T, Ctx>((t: T) =>
 		predicate(t) ? 'true' : 'false',
 	)
 }
 
-export function joinForm<Ctx>(
+export function joinSink<Ctx>(
 	sep = '\t',
 ): FoldForm<string, string, string, Ctx> {
 	return {
@@ -92,7 +92,7 @@ export function joinForm<Ctx>(
 	}
 }
 
-export function joinLastForm<Ctx>(
+export function joinLastSink<Ctx>(
 	sep = '\n',
 ): FoldForm<string, string, string, Ctx> {
 	return {

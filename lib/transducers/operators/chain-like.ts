@@ -1,11 +1,7 @@
-import { BaseCtx, ResolvedTransducer, Transducer } from '../collectables'
+import { BaseCtx, ResolvedTransducer, Transducer } from '../transductions'
 
 export function chain<A, B, Ctx extends BaseCtx<unknown, unknown>>(
-	mod: (
-		a: A,
-		index: Ctx['index'],
-		source: Ctx['unAcc'],
-	) => B[],
+	mod: (a: A, index: Ctx['index'], source: Ctx['unAcc']) => B[],
 ): Transducer<Ctx, A, B> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
 		return function ({ foldFn, result }) {
@@ -22,10 +18,11 @@ export function chain<A, B, Ctx extends BaseCtx<unknown, unknown>>(
 	}
 }
 
-export function flatten<
-	A,
-	Ctx extends BaseCtx<unknown, unknown>,
->(): Transducer<Ctx, A[], A> {
+export function flatten<A, Ctx extends BaseCtx<unknown, unknown>>(): Transducer<
+	Ctx,
+	A[],
+	A
+> {
 	return function <S>(p: ResolvedTransducer<S, A[], Ctx>) {
 		return function ({ foldFn, result }) {
 			return p({

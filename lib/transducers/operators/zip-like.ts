@@ -1,11 +1,11 @@
-import { BaseCtx, ResolvedTransducer, Transducer } from '../collectables'
-import { UnfoldForm } from '../unforms'
+import { Source } from '../sources'
+import { BaseCtx, ResolvedTransducer, Transducer } from '../transductions'
 
 // TODO: transduce branches
 // TODO: zipObj
 
 export function zip<A, B, Acc, Index, Ctx extends BaseCtx<unknown, unknown>>(
-	unfold: UnfoldForm<B, Acc, Index>,
+	unfold: Source<B, Acc, Index>,
 ): Transducer<Ctx, A, [A, B]> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
 		return function ({ foldFn, result }) {
@@ -28,7 +28,7 @@ export function zip<A, B, Acc, Index, Ctx extends BaseCtx<unknown, unknown>>(
 }
 
 export function zipCmp<A, B, Acc, Index, Ctx extends BaseCtx<unknown, unknown>>(
-	unfold: UnfoldForm<B, Acc, Index>,
+	unfold: Source<B, Acc, Index>,
 	cmp: (a: A, b: B) => number,
 ): Transducer<Ctx, A, [A | undefined, B | undefined]> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
@@ -72,7 +72,7 @@ export function zipCmp<A, B, Acc, Index, Ctx extends BaseCtx<unknown, unknown>>(
 }
 
 export function concat<A, Ctx, Index extends BaseCtx<Index, Acc>, B, Acc>(
-	unfold: UnfoldForm<B, Acc, Index>,
+	unfold: Source<B, Acc, Index>,
 ): Transducer<Ctx, A, A | B> {
 	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
 		return function ({ foldFn, result }) {

@@ -1,4 +1,4 @@
-import { BaseCtx, ResolvedTransducer, Transducer } from '../collectables'
+import { BaseCtx, ResolvedTransducer, Transducer } from '../transductions'
 
 export function map<A, B, Ctx extends BaseCtx<unknown, unknown>>(
 	mod: (a: A, index: Ctx['index'], source: Ctx['unAcc']) => B,

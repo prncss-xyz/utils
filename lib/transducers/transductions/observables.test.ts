@@ -1,5 +1,5 @@
-import { arrayFormDest } from '../forms'
-import { take } from '../transducers'
+import { take } from '../operators'
+import { arraySinkDest } from '../sinks'
 import { collectObservable } from './observables'
 
 describe('observable', () => {
@@ -10,7 +10,7 @@ describe('observable', () => {
 		})
 		const { close, next } = collectObservable<number>()(
 			{ complete },
-			arrayFormDest(),
+			arraySinkDest(),
 			take(2),
 		)
 		next(1)

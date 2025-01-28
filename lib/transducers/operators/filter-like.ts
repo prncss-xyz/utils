@@ -1,4 +1,4 @@
-import { BaseCtx, ResolvedTransducer, Transducer } from '../collectables'
+import { BaseCtx, ResolvedTransducer, Transducer } from '../transductions'
 
 export function filter<A, Ctx extends BaseCtx<unknown, unknown>>(
 	cond: (a: A, index: Ctx['index'], source: Ctx['unAcc']) => unknown,

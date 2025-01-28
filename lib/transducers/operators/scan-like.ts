@@ -1,8 +1,8 @@
-import { FoldForm, ResolvedTransducer, Transducer } from '../collectables'
-import { arrayForm } from '../forms'
+import { arraySink } from '../sinks'
+import { FoldForm, ResolvedTransducer, Transducer } from '../transductions'
 
 export function scan<R, Acc, Ctx, T>(
-	form: FoldForm<T, Acc, R, Ctx & { index: number }> = arrayForm<
+	form: FoldForm<T, Acc, R, Ctx & { index: number }> = arraySink<
 		T,
 		Ctx & { index: number }
 	>() as any,
@@ -34,7 +34,7 @@ export function group<T, R, Acc, Ctx>(
 ): Transducer<Ctx, T, R>
 export function group<T, R, Acc, Ctx>(
 	eq: (next: T, last: T, ctx: Ctx) => unknown,
-	form: FoldForm<T, Acc, R, Ctx & { index: number }> = arrayForm<
+	form: FoldForm<T, Acc, R, Ctx & { index: number }> = arraySink<
 		T,
 		Ctx & { index: number }
 	>() as any,

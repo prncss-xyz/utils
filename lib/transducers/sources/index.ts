@@ -1,13 +1,11 @@
-export interface UnfoldForm<Value, Index, Acc> {
+export interface Source<Value, Index, Acc> {
 	init: [Index, Acc]
 	step: (index: Index, acc: Acc) => [Value, Index, Acc] | undefined
 }
 
-export function rangeColl(
-	start: number,
-	end: number,
-	step = 1,
-): UnfoldForm<number, number, number> {
+/*
+export function observableColl<K, T>(): UnfoldForm<number, number, number> {
+	function s(v: [K, T] | undefined) {}
 	return {
 		init: [0, start],
 		step(index: number, acc: number) {
@@ -16,13 +14,42 @@ export function rangeColl(
 		},
 	}
 }
+*/
 
-export function arrayColl<T>(ts: T[]): UnfoldForm<T, number, T[]> {
+export function arraySource<T>(ts: T[]): Source<T, number, T[]> {
 	return {
 		init: [0, ts],
 		step(index, acc) {
 			if (index === acc.length) return undefined
 			return [acc[index]!, index + 1, acc]
+		},
+	}
+}
+
+export function rangeSource(
+	start: number,
+	end: number,
+	step = 1,
+): Source<number, number, number> {
+	return {
+		init: [0, start],
+		step(index, acc) {
+			if (step > 0 ? acc >= end : acc <= start) return undefined
+			return [acc, index + 1, acc + step] as const
+		},
+	}
+}
+
+export function loopSource<T>(
+	cond: (t: T) => unknown,
+	step: (t: T) => T,
+	init: T,
+): Source<T, number, T> {
+	return {
+		init: [0, init],
+		step(index, acc) {
+			if (cond(acc)) return [acc, index + 1, step(acc)]
+			return undefined
 		},
 	}
 }

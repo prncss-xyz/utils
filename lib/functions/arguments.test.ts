@@ -1,4 +1,4 @@
-import { curry, flip, fromInit, Init, sub, uncurry } from '.'
+import { curry, flip, fromInit, Init, uncurry } from '.'
 
 describe('uncurry', () => {
 	test('', () => {
@@ -6,11 +6,6 @@ describe('uncurry', () => {
 			x + y + z.length + (w ? 1 : 0)
 		const u = uncurry(x)
 		expect(u(1, 2, 'four', true)).toBe(8)
-	})
-	// FIXME:
-	test.skip('', () => {
-		const u = uncurry(sub)
-		expect(u(1, 2)).toBe(1)
 	})
 })
 

@@ -1,10 +1,10 @@
 import { id } from '@constellar/core'
 
-import { UnfoldForm } from '../unforms'
+import { Source } from '../sources'
 import { BaseCtx, EqForm, eqForm, FoldForm, ResolvedTransducer } from './core'
 
-export function collectUnfold<S, UnAcc, Index, T>(
-	source: UnfoldForm<S, Index, UnAcc>,
+export function collectSink<S, UnAcc, Index, T>(
+	source: Source<S, Index, UnAcc>,
 	f: (
 		f: EqForm<S, BaseCtx<Index, UnAcc>>,
 	) => ResolvedTransducer<S, T, BaseCtx<Index, UnAcc>> = id<any>,

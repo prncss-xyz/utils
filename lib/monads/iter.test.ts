@@ -1,5 +1,6 @@
 import { range } from '../iterators'
-import { arrayFormDest, asyncCollect, collect } from '../transduction'
+import { arraySinkDest } from '../transducers'
+import { asyncCollect, collect } from '../transducers/transductions'
 import { arr, asyncMulti, asyncPick, multi, pick, where } from './iter'
 
 describe('arr.chain', () => {
@@ -23,7 +24,7 @@ describe('do notation', () => {
 				return [a, b, c] as const
 			})
 		}
-		const res = collect(rightTriangles(10))(arrayFormDest())
+		const res = collect(rightTriangles(10))(arraySinkDest())
 		expect(res).toEqual([
 			[4, 3, 5],
 			[8, 6, 10],
@@ -47,7 +48,7 @@ describe('async', () => {
 				return [a, b, c] as const
 			})
 		}
-		const res = await asyncCollect(rightTriangles(10))(arrayFormDest())
+		const res = await asyncCollect(rightTriangles(10))(arraySinkDest())
 		expect(res).toEqual([
 			[4, 3, 5],
 			[8, 6, 10],
