@@ -31,7 +31,7 @@ function toIter<A>(a: Monad<A>): A[] {
 	return [a]
 }
 
-function tapZero<T>(f: () => void) {
+function tapZero<T>(f: () => unknown) {
 	return function (x: T | undefined) {
 		if (x === undefined) f()
 		return x

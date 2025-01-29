@@ -5,7 +5,7 @@ import { BaseCtx, EqForm, eqForm, FoldForm, ResolvedTransducer } from './core'
 export function collectIndexed<Index, Source, Target = Source>(
 	source: Iterable<[Index, Source]>,
 	f: (
-		f: EqForm<Source, BaseCtx<Index, Source>>,
+		f: EqForm<Source, BaseCtx<Index, Iterable<[Index, Source]>>>,
 	) => ResolvedTransducer<
 		Source,
 		Target,

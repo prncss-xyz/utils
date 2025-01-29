@@ -170,7 +170,7 @@ export const arr = {
 	chain,
 	map,
 	plus,
-	tapZero<A>(f: () => void) {
+	tapZero<A>(f: () => unknown) {
 		return function (x: A[]) {
 			if (x.length === 0) f()
 			return x
