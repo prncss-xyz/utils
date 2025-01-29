@@ -1,6 +1,6 @@
 {
 	"name": "@prncss-xyz/utils",
-	"version": "0.8.1",
+	"version": "0.9.0",
 	"type": "module",
 	"publishConfig": {
 		"access": "public"
