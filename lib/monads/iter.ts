@@ -12,18 +12,6 @@ function zero<A>(): A[] {
 	return []
 }
 
-export function asyncChain_<TFrom, TTo>(
-	mapper: (t: TFrom) => AsyncIterable<TTo> | Iterable<TTo>,
-) {
-	return async function* inner(source: AsyncIterable<TFrom>) {
-		for await (const item of source) {
-			for await (const nestedItem of mapper(item)) {
-				yield nestedItem
-			}
-		}
-	}
-}
-
 function* _mapIter<TFrom, TTo>(
 	mapper: (a: TFrom, index: number, source: Iterable<TFrom>) => TTo,
 	source: Iterable<TFrom>,
@@ -86,15 +74,21 @@ function chain<TFrom, TTo>(
 	}
 }
 
-function asyncChain<TFrom, TTo>(
+export function asyncChain_<TFrom, TTo>(
 	mapper: (
 		t: TFrom,
-		index: number,
-		source: AsyncIterable<TFrom> | Iterable<TFrom>,
-	) => Promise<AsyncIterable<TTo>>,
+	) => AsyncIterable<Promise<TTo> | TTo> | Iterable<Promise<TTo> | TTo>,
 ) {
-	return function (source: Iterable<TFrom>): AsyncIterable<TTo> {
-		return _asyncChainIter(mapper, source)
+	return async function* inner(
+		source:
+			| AsyncIterable<Promise<TFrom> | TFrom>
+			| Iterable<Promise<TFrom> | TFrom>,
+	) {
+		for await (const item of source) {
+			for await (const nestedItem of mapper(item)) {
+				yield nestedItem
+			}
+		}
 	}
 }
 
@@ -103,10 +97,16 @@ export function asyncMap<TFrom, TTo>(
 	mapper: (
 		t: TFrom,
 		index: number,
-		source: AsyncIterable<TFrom> | Iterable<TFrom>,
+		source:
+			| AsyncIterable<Promise<TFrom> | TFrom>
+			| Iterable<Promise<TFrom> | TFrom>,
 	) => Promise<TTo> | TTo,
 ) {
-	return async function* inner(source: AsyncIterable<TFrom> | Iterable<TFrom>) {
+	return async function* inner(
+		source:
+			| AsyncIterable<Promise<TFrom> | TFrom>
+			| Iterable<Promise<TFrom> | TFrom>,
+	) {
 		let index = 0
 		for await (const item of source) {
 			yield await mapper(item, index++, source)

@@ -26,6 +26,14 @@ export function valueSink<T, Ctx>(): FoldForm<
 	}
 }
 
+export function voidSink<T, Ctx>(): FoldForm<T, void, void, Ctx> {
+	return {
+		foldFn: always(undefined),
+		init: always(undefined),
+		result: id,
+	}
+}
+
 export function objSink<T, Index extends PropertyKey, Ctx>(): FoldForm<
 	T,
 	Record<Index, T>,
