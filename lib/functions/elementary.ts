@@ -29,9 +29,11 @@ export const modulo = curry((a: number, b: number) => {
 	return b % a
 })
 
-export const clamp = curry((min: number, max: number, source: number) => {
-	return Math.max(Math.min(source, max), min)
-})
+export function clamp(min: number, max = Infinity) {
+	return function (source: number) {
+		return Math.max(Math.min(source, max), min)
+	}
+}
 
 export function tuple<const Args extends unknown[]>(...args: Args) {
 	return args
@@ -40,5 +42,19 @@ export function tuple<const Args extends unknown[]>(...args: Args) {
 export function eqWith<A, B>(m: (a: A) => B) {
 	return function (a: A, b: A) {
 		return Object.is(m(a), m(b))
+	}
+}
+
+export function sort<X>(cmp?: (a: X, b: X) => number) {
+	return function (xs: X[]) {
+		const ys = xs.slice()
+		ys.sort(cmp)
+		return ys
+	}
+}
+
+export function join(sep?: string) {
+	return function <X>(xs: X[]) {
+		return xs.join(sep)
 	}
 }
