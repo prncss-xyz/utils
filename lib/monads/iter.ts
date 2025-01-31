@@ -106,7 +106,7 @@ export function asyncMap<TFrom, TTo>(
 		source: AsyncIterable<TFrom> | Iterable<TFrom>,
 	) => Promise<TTo> | TTo,
 ) {
-	return async function* inner(source: AsyncIterable<TFrom>) {
+	return async function* inner(source: AsyncIterable<TFrom> | Iterable<TFrom>) {
 		let index = 0
 		for await (const item of source) {
 			yield await mapper(item, index++, source)
@@ -195,7 +195,7 @@ export const arr = {
 export const asyncArr = {
 	chain: asyncChain_,
 	map: asyncMap,
-  plus,
+	plus,
 	unit,
 	zero,
 }

@@ -1,6 +1,17 @@
+import { flow } from '@constellar/core'
+
+import { mul } from '../functions'
 import { range } from '../iterators'
 import { arraySinkDest, asyncCollect, collect } from '../transducers'
-import { arr, asyncMulti, asyncPick, multi, pick, where } from './iter'
+import {
+	arr,
+	asyncArr,
+	asyncMulti,
+	asyncPick,
+	multi,
+	pick,
+	where,
+} from './iter'
 
 describe('arr.chain', () => {
 	test('', () => {
@@ -52,5 +63,33 @@ describe('async', () => {
 			[4, 3, 5],
 			[8, 6, 10],
 		])
+	})
+})
+
+describe('asyncIter', () => {
+	test('map', async () => {
+		async function* asyncRange(start: number, end: number) {
+			for (let i = start; i < end; i++) {
+				yield i
+			}
+		}
+		const res = await asyncCollect(
+			flow(asyncRange(0, 4), asyncArr.map(mul(2))),
+		)(arraySinkDest())
+		expect(res).toEqual([0, 2, 4, 6])
+	})
+	test('chain', async () => {
+		async function* asyncRange(start: number, end: number) {
+			for (let i = start; i < end; i++) {
+				yield i
+			}
+		}
+		const res = await asyncCollect(
+			flow(
+				asyncRange(0, 4),
+				asyncArr.chain((x) => asyncRange(0, x)),
+			),
+		)(arraySinkDest())
+		expect(res).toEqual([0, 0, 1, 0, 1, 2])
 	})
 })

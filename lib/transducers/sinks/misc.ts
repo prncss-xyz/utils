@@ -3,6 +3,16 @@ import { id } from '@constellar/core'
 import { always } from '../../functions'
 import { FoldForm } from '../transductions'
 
+export function forEachSink<T, Ctx>(
+	cb: (v: T) => void,
+): FoldForm<T, void, void, Ctx> {
+	return {
+		foldFn: cb,
+		init: always(undefined),
+		result: id,
+	}
+}
+
 export function valueSink<T, Ctx>(): FoldForm<
 	T,
 	T | undefined,
