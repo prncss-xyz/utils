@@ -13,7 +13,7 @@ function zero<A>(): A[] {
 }
 
 export function asyncChain_<TFrom, TTo>(
-	mapper: (t: TFrom) => AsyncIterable<TTo>,
+	mapper: (t: TFrom) => AsyncIterable<TTo> | Iterable<TTo>,
 ) {
 	return async function* inner(source: AsyncIterable<TFrom>) {
 		for await (const item of source) {
@@ -86,12 +86,24 @@ function chain<TFrom, TTo>(
 	}
 }
 
+function asyncChain<TFrom, TTo>(
+	mapper: (
+		t: TFrom,
+		index: number,
+		source: AsyncIterable<TFrom> | Iterable<TFrom>,
+	) => Promise<AsyncIterable<TTo>>,
+) {
+	return function (source: Iterable<TFrom>): AsyncIterable<TTo> {
+		return _asyncChainIter(mapper, source)
+	}
+}
+
 // https://github.com/jamiemccrindle/axax/blob/0020e8f55d79fa61a26d8266aeeccf2546a3d766/src/map.ts
 export function asyncMap<TFrom, TTo>(
 	mapper: (
 		t: TFrom,
 		index: number,
-		source: AsyncIterable<TFrom>,
+		source: AsyncIterable<TFrom> | Iterable<TFrom>,
 	) => Promise<TTo> | TTo,
 ) {
 	return async function* inner(source: AsyncIterable<TFrom>) {
@@ -176,6 +188,14 @@ export const arr = {
 			return x
 		}
 	},
+	unit,
+	zero,
+}
+
+export const asyncArr = {
+	chain: asyncChain_,
+	map: asyncMap,
+  plus,
 	unit,
 	zero,
 }
