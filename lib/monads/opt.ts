@@ -40,9 +40,11 @@ function tapZero<T>(f: () => unknown) {
 	}
 }
 
-function or<A, B>(a: Monad<A>, b: Init<B, []>): Monad<A | B> {
-	if (a === undefined) return fromInit(b)
-	return a
+function or<A, B>(b: Init<B, []>) {
+	return function (a: Monad<A>): A | B {
+		if (a === undefined) return fromInit(b)
+		return a
+	}
 }
 
 export const opt = {

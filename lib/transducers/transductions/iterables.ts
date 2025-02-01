@@ -35,7 +35,8 @@ export type AsyncIterableCtx<S> = BaseCtx<
 	number,
 	AsyncIterable<S> | Promise<AsyncIterable<S>>
 >
-export function asyncCollect<S, T = S>(
+export function asyncCollect
+<S, T = S>(
 	source: AsyncIterable<S> | Promise<AsyncIterable<S>>,
 	f: (
 		f: EqForm<S, AsyncIterableCtx<S>>,

@@ -1,4 +1,11 @@
 import { fromInit, Init } from '../functions'
+import {
+	asyncCollect,
+	AsyncIterableCtx,
+	collect,
+	FoldForm,
+	IterableCtx,
+} from '../transducers'
 
 function unit<A>(a: A) {
 	return [a]
@@ -185,9 +192,24 @@ export async function* asyncEffect<T>(eff: () => Promise<T>) {
 	return yield* asyncPick(() => asyncUnit(eff()))
 }
 
+function or<A, B>(b: Init<B, []>) {
+	return function (a: A[]): A[] | B {
+		if (a.length === 0) return fromInit(b)
+		return a
+	}
+}
+
 export const arr = {
 	chain,
+	collect<AccForm, RForm, S>(
+		form: FoldForm<S, AccForm, RForm, IterableCtx<S>>,
+	) {
+		return function (source: Iterable<S>) {
+			return collect(source)(form)
+		}
+	},
 	map,
+	or,
 	plus,
 	tapZero<A>(f: () => unknown) {
 		return function (x: A[]) {
@@ -196,11 +218,19 @@ export const arr = {
 		}
 	},
 	unit,
+
 	zero,
 }
 
 export const asyncArr = {
 	chain: asyncChain_,
+	collect<AccForm, RForm, S>(
+		form: FoldForm<S, AccForm, RForm, AsyncIterableCtx<S>>,
+	) {
+		return function (source: AsyncIterable<S> | Promise<AsyncIterable<S>>) {
+			return asyncCollect(source)(form)
+		}
+	},
 	map: asyncMap,
 	plus,
 	unit,

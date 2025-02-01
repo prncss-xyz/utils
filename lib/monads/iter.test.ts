@@ -1,4 +1,4 @@
-import { flow } from '@constellar/core'
+import { flow, id } from '@constellar/core'
 
 import { mul } from '../functions'
 import { range } from '../iterators'
@@ -73,9 +73,11 @@ describe('asyncIter', () => {
 				yield i
 			}
 		}
-		const res = await asyncCollect(
-			flow(asyncRange(0, 4), asyncArr.map(mul(2))),
-		)(arraySinkDest())
+		const res = flow(
+			asyncRange(0, 4),
+			asyncArr.map(mul(2)),
+			asyncArr.collect(arraySinkDest()),
+		)
 		expect(res).toEqual([0, 2, 4, 6])
 	})
 	test('chain', async () => {
