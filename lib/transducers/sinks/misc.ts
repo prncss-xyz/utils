@@ -2,6 +2,7 @@ import { id } from '@constellar/core'
 
 import { always } from '../../functions'
 import { FoldForm } from '../transductions'
+import { shuffledAdd } from './internal'
 
 export function forEachSink<T, Ctx>(
 	cb: (v: T) => void,
@@ -130,5 +131,13 @@ export function joinLastSink<Ctx>(
 		foldFn: (t, acc) => acc + t + sep,
 		init: () => '',
 		result: id,
+	}
+}
+
+export function shuffledSink<T>() {
+	return {
+		foldFn: shuffledAdd(),
+		init: () => [] as T[],
+		result: id<T[]>,
 	}
 }
