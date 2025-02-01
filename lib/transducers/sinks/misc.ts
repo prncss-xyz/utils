@@ -136,7 +136,7 @@ export function joinLastSink<Ctx>(
 
 export function shuffledSink<T>() {
 	return {
-		foldFn: shuffledAdd(),
+		foldFn: shuffledAdd<T>(),
 		init: () => [] as T[],
 		result: id<T[]>,
 	}
