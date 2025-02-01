@@ -1,3 +1,5 @@
+import { insert } from '@constellar/core'
+
 import { isoAssert } from '../../assert'
 
 // TODO: use dichotomic search
@@ -17,7 +19,7 @@ export function sortedAdd<T>(cmp: (a: T, b: T) => number) {
 
 export function shuffledAdd<T>() {
 	return function (t: T, acc: T[]): T[] {
-		const i = Math.floor(Math.random() * acc.length + 1)
-		return acc.slice(0, i).concat(t).concat(acc.slice(i))
+		const i = Math.floor(Math.random() * (acc.length + 1))
+		return insert(i, t, acc)
 	}
 }
