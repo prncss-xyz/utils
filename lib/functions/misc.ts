@@ -18,7 +18,9 @@ export const getUntil = curry(function <T>(
 	} while (!cond(init))
 })
 
-export function tap<T>(fn: (t: T) => unknown, t: T): T {
-	fn(t)
-	return t
+export function tap<T>(fn: (t: T) => unknown) {
+	return function (t: T) {
+		fn(t)
+		return t
+	}
 }
