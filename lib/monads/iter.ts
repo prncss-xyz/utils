@@ -75,16 +75,18 @@ function chain<TFrom, TTo>(
 }
 
 export function asyncChain_<TFrom, TTo>(
-	mapper: (
-		t: TFrom,
-	) => AsyncIterable<Promise<TTo> | TTo> | Iterable<Promise<TTo> | TTo>,
+	mapper: (t: TFrom) => AsyncIterable<Promise<TTo> | TTo> | Iterable<TTo>,
 ) {
 	return async function* inner(
 		source:
 			| AsyncIterable<Promise<TFrom> | TFrom>
-			| Iterable<Promise<TFrom> | TFrom>,
+			| Iterable<Promise<TFrom> | TFrom>
+			| Promise<
+					| AsyncIterable<Promise<TFrom> | TFrom>
+					| Iterable<Promise<TFrom> | TFrom>
+			  >,
 	) {
-		for await (const item of source) {
+		for await (const item of await source) {
 			for await (const nestedItem of mapper(item)) {
 				yield nestedItem
 			}
