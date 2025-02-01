@@ -74,7 +74,7 @@ function chain<TFrom, TTo>(
 	}
 }
 
-export async function asyncChain_<TFrom, TTo>(
+export function asyncChain_<TFrom, TTo>(
 	mapper: (
 		t: TFrom,
 	) =>
