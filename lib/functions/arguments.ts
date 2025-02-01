@@ -81,3 +81,11 @@ export function flip<A, B, Args extends any[], R>(
 		return f(a, b, ...args)
 	}, n)
 }
+
+export function bind<O, K extends keyof O>(o: O, method: K) {
+	return function (
+		a: O[K] extends (a: infer A) => unknown ? A : never,
+	): O[K] extends (a: any) => infer R ? R : never {
+		return (o[method] as any)(a)
+	}
+}
