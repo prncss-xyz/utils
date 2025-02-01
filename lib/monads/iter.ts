@@ -128,6 +128,27 @@ export function asyncMap<TFrom, TTo>(
 	}
 }
 
+export function asyncFilter<TFrom>(
+	predicate: (
+		t: TFrom,
+		index: number,
+		source:
+			| AsyncIterable<Promise<TFrom> | TFrom>
+			| Iterable<Promise<TFrom> | TFrom>,
+	) => Promise<unknown> | unknown,
+) {
+	return async function* inner(
+		source:
+			| AsyncIterable<Promise<TFrom> | TFrom>
+			| Iterable<Promise<TFrom> | TFrom>,
+	) {
+		let index = 0
+		for await (const item of source) {
+			if (await predicate(item, index++, source)) yield item
+		}
+	}
+}
+
 function plus<A>(as: Array<A>, a: A) {
 	return Array.prototype.concat(as, a)
 }
@@ -231,6 +252,7 @@ export const asyncArr = {
 			return asyncCollect(source)(form)
 		}
 	},
+	filter: asyncFilter,
 	map: asyncMap,
 	plus,
 	unit,
