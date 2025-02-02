@@ -1,4 +1,13 @@
-import { curry } from './arguments'
+/* function curry<A, B>(f: (a: A, b: B) => unknown) {
+	return function (a: A) {
+		return function (b: B) {
+			return f(a, b)
+		}
+	}
+}
+*/
+
+import { curry } from "./arguments"
 
 export const mul = curry((a: number, b: number) => b * a)
 export const div = curry((a: number, b: number) => b / a)
@@ -8,8 +17,8 @@ export const lt = curry((a: number, b: number) => b < a)
 export const lte = curry((a: number, b: number) => b <= a)
 export const gt = curry((a: number, b: number) => b > a)
 export const gte = curry((a: number, b: number) => b >= a)
-export const eq = curry((a: number, b: number) => Object.is(b, a))
-export const neq = curry((a: number, b: number) => !Object.is(b, a))
+export const eq = curry(<A, B>(a: A, b: B) => Object.is(b, a))
+export const neq = curry(<A, B>(a: A, b: B) => !Object.is(b, a))
 export const and = curry((a: unknown, b: unknown) => b && a)
 export const or = curry((a: unknown, b: undefined) => b || a)
 export const xor = curry((a: unknown, b: unknown) => (b && !a) || (!b && a))

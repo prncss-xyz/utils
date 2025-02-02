@@ -6,7 +6,12 @@ export function sorted<T>(cmp = cmp0<T>) {
 	}
 }
 
-export function insertSorted<T>(cmp = cmp0<T>) {
+// this provides better type inference
+export function insertSorted<T>(t: T) {
+	return insertCmp(cmp0)(t)
+}
+
+export function insertCmp<T>(cmp = cmp0<T>) {
 	return function (t: T) {
 		return function (acc: T[]) {
 			for (let i = 0; i < acc.length; i++) {
@@ -21,7 +26,7 @@ export function insertSorted<T>(cmp = cmp0<T>) {
 	}
 }
 
-export function filter<X>(predicate: (x: X) => unknown) {
+export function filtered<X>(predicate: (x: X) => unknown) {
 	let dirty = false
 	function p(x: X) {
 		if (predicate(x)) {

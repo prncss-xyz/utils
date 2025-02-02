@@ -1,16 +1,29 @@
-import {
-	focus,
-	Focus,
-	isUndefined,
-	pipe,
-	pipe2,
-	PRISM,
-	REMOVE,
-} from '@constellar/core'
+import { focus, Focus, isUndefined, PRISM, REMOVE } from '@constellar/core'
 
 import { isoAssert } from './assert'
-import { fromInit, Init, not } from './functions'
-import { insertValue, removeValue, symmetricDiff } from './functions/arrays'
+import { fromInit, Init, neq } from './functions'
+import {
+	filtered,
+	insertSorted,
+	symmetricDiff,
+} from './functions/arrays'
+
+/*
+export function insertValue<X>(element: X) {
+	let dirty = true
+	function p(x: X) {
+		if (Object.is(x, element)) dirty = false
+	}
+	return function (xs: X[]) {
+		xs.forEach(p)
+		return dirty ? xs.concat(element) : xs
+	}
+}
+*/
+
+export function removeValue<X>(element: X) {
+	return filtered<X>(neq(element))
+}
 
 export type NonRemove<T> = T extends typeof REMOVE ? never : T
 
@@ -165,7 +178,7 @@ export function manyToMany<SValue, TValue, SKey, TKey, Fail, Command, IS_PRISM>(
 			target.map(parentOut, resolved.update(removeValue(key))),
 		)
 		parentsIn.forEach((parentIn) =>
-			target.map(parentIn, resolved.update(insertValue(key))),
+			target.map(parentIn, resolved.update(insertSorted(key))),
 		)
 	})
 	return resolved.view.bind(resolved)
