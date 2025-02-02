@@ -73,7 +73,7 @@ describe('asyncIter', () => {
 				yield i
 			}
 		}
-		const res = flow(
+		const res = await flow(
 			asyncRange(0, 4),
 			asyncArr.map(mul(2)),
 			asyncArr.collect(arraySinkDest()),

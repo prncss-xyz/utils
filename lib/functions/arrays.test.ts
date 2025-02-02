@@ -1,44 +1,44 @@
-import { insertIndex, removeIndex, replaceIndex } from './arrays'
+import { insert, remove, replace } from './arrays'
 
 describe('insert', () => {
 	it('inserts an element', () => {
-		expect(insertIndex(0, 3)([0, 1, 2])).toEqual([3, 0, 1, 2])
-		expect(insertIndex(1, 3)([0, 1, 2])).toEqual([0, 3, 1, 2])
-		expect(insertIndex(2, 3)([0, 1, 2])).toEqual([0, 1, 3, 2])
-		expect(insertIndex(3, 3)([0, 1, 2])).toEqual([0, 1, 2, 3])
-		expect(insertIndex(-1, 3)([0, 1, 2])).toEqual([0, 1, 3, 2])
-		expect(insertIndex(3, 3)([0, 1, 2])).toEqual([0, 1, 2, 3])
-		expect(insertIndex(4, 3)([0, 1, 2])).toEqual([0, 1, 2])
-		expect(insertIndex(-4, 3)([0, 1, 2])).toEqual([0, 1, 2])
+		expect(insert(0, 3)([0, 1, 2])).toEqual([3, 0, 1, 2])
+		expect(insert(1, 3)([0, 1, 2])).toEqual([0, 3, 1, 2])
+		expect(insert(2, 3)([0, 1, 2])).toEqual([0, 1, 3, 2])
+		expect(insert(3, 3)([0, 1, 2])).toEqual([0, 1, 2, 3])
+		expect(insert(-1, 3)([0, 1, 2])).toEqual([0, 1, 3, 2])
+		expect(insert(3, 3)([0, 1, 2])).toEqual([0, 1, 2, 3])
+		expect(insert(4, 3)([0, 1, 2])).toEqual([0, 1, 2])
+		expect(insert(-4, 3)([0, 1, 2])).toEqual([0, 1, 2])
 	})
 })
 
 describe('replace', () => {
 	it('replace an element', () => {
-		expect(replaceIndex(3, 0)([0, 1, 2])).toEqual([3, 1, 2])
-		expect(replaceIndex(3, 1)([0, 1, 2])).toEqual([0, 3, 2])
-		expect(replaceIndex(3, 2)([0, 1, 2])).toEqual([0, 1, 3])
-		expect(replaceIndex(3, -1)([0, 1, 2])).toEqual([0, 1, 3])
-		expect(replaceIndex(3, 3)([0, 1, 2])).toEqual([0, 1, 2])
-		expect(replaceIndex(-4, 3)([0, 1, 2])).toEqual([0, 1, 2])
+		expect(replace(3, 0)([0, 1, 2])).toEqual([3, 1, 2])
+		expect(replace(3, 1)([0, 1, 2])).toEqual([0, 3, 2])
+		expect(replace(3, 2)([0, 1, 2])).toEqual([0, 1, 3])
+		expect(replace(3, -1)([0, 1, 2])).toEqual([0, 1, 3])
+		expect(replace(3, 3)([0, 1, 2])).toEqual([0, 1, 2])
+		expect(replace(-4, 3)([0, 1, 2])).toEqual([0, 1, 2])
 	})
 	it('keeps the reference when possible', () => {
 		const xs = [0, 1, 2]
-		expect(replaceIndex(0, 0)(xs)).toBe(xs)
+		expect(replace(0, 0)(xs)).toBe(xs)
 	})
 })
 
 describe('remove', () => {
 	it('remove an element', () => {
-		expect(removeIndex(0)([0, 1, 2])).toEqual([1, 2])
-		expect(removeIndex(1)([0, 1, 2])).toEqual([0, 2])
-		expect(removeIndex(2)([0, 1, 2])).toEqual([0, 1])
-		expect(removeIndex(-1)([0, 1, 2])).toEqual([0, 1])
-		expect(removeIndex(3)([0, 1, 2])).toEqual([0, 1, 2])
-		expect(removeIndex(-4)([0, 1, 2])).toEqual([0, 1, 2])
+		expect(remove(0)([0, 1, 2])).toEqual([1, 2])
+		expect(remove(1)([0, 1, 2])).toEqual([0, 2])
+		expect(remove(2)([0, 1, 2])).toEqual([0, 1])
+		expect(remove(-1)([0, 1, 2])).toEqual([0, 1])
+		expect(remove(3)([0, 1, 2])).toEqual([0, 1, 2])
+		expect(remove(-4)([0, 1, 2])).toEqual([0, 1, 2])
 	})
 	it('keeps the reference when possible', () => {
 		const xs = [0, 1, 2]
-		expect(removeIndex(4)(xs)).toBe(xs)
+		expect(remove(4)(xs)).toBe(xs)
 	})
 })
