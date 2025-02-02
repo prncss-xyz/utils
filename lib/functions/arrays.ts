@@ -46,6 +46,12 @@ export function filteredValue<X>(element: X) {
 	return filtered<X>(neq(element))
 }
 
+export function included<X>(elements: X[]) {
+	return function (x: X) {
+		return elements.includes(x)
+	}
+}
+
 export function symmetricDiff<X>(a: X[], b: X[]) {
 	return [
 		a.filter((x) => !b.includes(x)),

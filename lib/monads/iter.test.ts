@@ -1,24 +1,14 @@
-import { flow, id } from '@constellar/core'
-
-import { mul } from '../functions'
+import { iter } from '.'
 import { range } from '../iterators'
-import { arraySinkDest, asyncCollect, collect } from '../transducers'
-import {
-	arr,
-	asyncArr,
-	asyncMulti,
-	asyncPick,
-	multi,
-	pick,
-	where,
-} from './iter'
+import { arraySinkDest, collect } from '../transducers'
+import { multi, pick, where } from './iter'
 
 describe('arr.chain', () => {
 	test('', () => {
 		function m(n: number) {
 			return range(0, n)
 		}
-		const res = Array.from(arr.chain(m)(range(0, 4)))
+		const res = Array.from(iter.chain(m)(range(0, 4)))
 		expect(res).toEqual([0, 0, 1, 0, 1, 2])
 	})
 })
@@ -39,59 +29,5 @@ describe('do notation', () => {
 			[4, 3, 5],
 			[8, 6, 10],
 		])
-	})
-})
-
-describe('async', () => {
-	async function* asyncRange(start: number, end: number) {
-		for (let i = start; i < end; i++) {
-			yield i
-		}
-	}
-	test('async with sync', async () => {
-		async function rightTriangles(maxLengthC: number) {
-			return asyncMulti(async function* () {
-				const c = yield* asyncPick(asyncRange(1, maxLengthC + 1))
-				const a = yield* pick(range(1, c))
-				const b = yield* asyncPick(asyncRange(1, a))
-				yield* where(a ** 2 + b ** 2 === c ** 2)
-				return [a, b, c] as const
-			})
-		}
-		const res = await asyncCollect(rightTriangles(10))(arraySinkDest())
-		expect(res).toEqual([
-			[4, 3, 5],
-			[8, 6, 10],
-		])
-	})
-})
-
-describe('asyncIter', () => {
-	test('map', async () => {
-		async function* asyncRange(start: number, end: number) {
-			for (let i = start; i < end; i++) {
-				yield i
-			}
-		}
-		const res = await flow(
-			asyncRange(0, 4),
-			asyncArr.map(mul(2)),
-			asyncArr.collect(arraySinkDest()),
-		)
-		expect(res).toEqual([0, 2, 4, 6])
-	})
-	test('chain', async () => {
-		async function* asyncRange(start: number, end: number) {
-			for (let i = start; i < end; i++) {
-				yield i
-			}
-		}
-		const res = await asyncCollect(
-			flow(
-				asyncRange(0, 4),
-				asyncArr.chain((x) => asyncRange(0, x)),
-			),
-		)(arraySinkDest())
-		expect(res).toEqual([0, 0, 1, 0, 1, 2])
 	})
 })

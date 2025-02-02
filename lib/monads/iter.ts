@@ -1,21 +1,11 @@
 import { fromInit, Init } from '../functions'
-import {
-	asyncCollect,
-	AsyncIterableCtx,
-	collect,
-	FoldForm,
-	IterableCtx,
-} from '../transducers'
+import { collect as collect_, FoldForm, IterableCtx } from '../transducers'
 
-function unit<A>(a: A) {
+export function unit<A>(a: A) {
 	return [a]
 }
 
-async function* asyncUnit<A>(a: A) {
-	yield a
-}
-
-function zero<A>(): A[] {
+export function zero<A>(): A[] {
 	return []
 }
 
@@ -37,7 +27,7 @@ function _map<TFrom, TTo>(
 	return _mapIter(mapper, source)
 }
 
-function map<TFrom, TTo>(
+export function map<TFrom, TTo>(
 	mapper: (a: TFrom, index: number, source: Iterable<TFrom>) => TTo,
 ) {
 	return function (source: Iterable<TFrom>): Iterable<TTo> {
@@ -57,23 +47,7 @@ function* _chainIter<TFrom, TTo>(
 	}
 }
 
-async function* _asyncChainIter<TFrom, TTo>(
-	mapper: (
-		t: TFrom,
-		index: number,
-		source: AsyncIterable<TFrom> | Iterable<TFrom>,
-	) => Promise<AsyncIterable<TTo>>,
-	source: AsyncIterable<TFrom> | Iterable<TFrom>,
-): AsyncIterable<TTo> {
-	let index = 0
-	for await (const item of source) {
-		for await (const nestedItem of await mapper(item, index++, source)) {
-			yield nestedItem
-		}
-	}
-}
-
-function chain<TFrom, TTo>(
+export function chain<TFrom, TTo>(
 	mapper: (t: TFrom, index: number, source: Iterable<TFrom>) => Iterable<TTo>,
 ) {
 	return function (source: Iterable<TFrom>): Iterable<TTo> {
@@ -81,75 +55,7 @@ function chain<TFrom, TTo>(
 	}
 }
 
-export function asyncChain_<TFrom, TTo>(
-	mapper: (
-		t: TFrom,
-	) =>
-		| AsyncIterable<Promise<TTo> | TTo>
-		| Iterable<TTo>
-		| Promise<AsyncIterable<Promise<TTo> | TTo> | Iterable<TTo>>,
-) {
-	return async function* inner(
-		source:
-			| AsyncIterable<Promise<TFrom> | TFrom>
-			| Iterable<Promise<TFrom> | TFrom>
-			| Promise<
-					| AsyncIterable<Promise<TFrom> | TFrom>
-					| Iterable<Promise<TFrom> | TFrom>
-			  >,
-	) {
-		for await (const item of await source) {
-			for await (const nestedItem of await mapper(item)) {
-				yield nestedItem
-			}
-		}
-	}
-}
-
-// https://github.com/jamiemccrindle/axax/blob/0020e8f55d79fa61a26d8266aeeccf2546a3d766/src/map.ts
-export function asyncMap<TFrom, TTo>(
-	mapper: (
-		t: TFrom,
-		index: number,
-		source:
-			| AsyncIterable<Promise<TFrom> | TFrom>
-			| Iterable<Promise<TFrom> | TFrom>,
-	) => Promise<TTo> | TTo,
-) {
-	return async function* inner(
-		source:
-			| AsyncIterable<Promise<TFrom> | TFrom>
-			| Iterable<Promise<TFrom> | TFrom>,
-	) {
-		let index = 0
-		for await (const item of source) {
-			yield await mapper(item, index++, source)
-		}
-	}
-}
-
-export function asyncFilter<TFrom>(
-	predicate: (
-		t: TFrom,
-		index: number,
-		source:
-			| AsyncIterable<Promise<TFrom> | TFrom>
-			| Iterable<Promise<TFrom> | TFrom>,
-	) => Promise<unknown> | unknown,
-) {
-	return async function* inner(
-		source:
-			| AsyncIterable<Promise<TFrom> | TFrom>
-			| Iterable<Promise<TFrom> | TFrom>,
-	) {
-		let index = 0
-		for await (const item of source) {
-			if (await predicate(item, index++, source)) yield item
-		}
-	}
-}
-
-function plus<A>(as: Array<A>, a: A) {
+export function plus<A>(as: Array<A>, a: A) {
 	return Array.prototype.concat(as, a)
 }
 
@@ -172,32 +78,7 @@ export function multi<N, R>(
 	}
 }
 
-export function asyncMulti<N, R>(
-	genFn: () => AsyncGenerator<Init<AsyncIterable<N> | Iterable<N>>, R, N>,
-): Promise<AsyncIterable<R>> {
-	return run([])
-	async function run(history: Array<N>): Promise<AsyncIterable<R>> {
-		const g = genFn()
-		let yielded = await g.next()
-		for (const next of history) {
-			yielded = await g.next(next)
-		}
-		if (yielded.done) {
-			return asyncUnit(yielded.value)
-		}
-		const { value } = yielded
-		return _asyncChainIter(
-			(next: N) => run(plus(history, next)),
-			fromInit(value),
-		)
-	}
-}
-
 export function* pick<A>(as: Init<Iterable<A>>) {
-	return (yield as) as A
-}
-
-export function* asyncPick<A>(as: Init<AsyncIterable<A>>) {
 	return (yield as) as A
 }
 
@@ -209,52 +90,17 @@ export function* effect<T>(eff: () => T) {
 	return yield* pick(() => unit(eff()))
 }
 
-export async function* asyncEffect<T>(eff: () => Promise<T>) {
-	return yield* asyncPick(() => asyncUnit(eff()))
-}
-
-function or<A, B>(b: Init<B, []>) {
+export function or<A, B>(b: Init<B, []>) {
 	return function (a: A[]): A[] | B {
 		if (a.length === 0) return fromInit(b)
 		return a
 	}
 }
 
-export const arr = {
-	chain,
-	collect<AccForm, RForm, S>(
-		form: FoldForm<S, AccForm, RForm, IterableCtx<S>>,
-	) {
-		return function (source: Iterable<S>) {
-			return collect(source)(form)
-		}
-	},
-	map,
-	or,
-	plus,
-	tapZero<A>(f: () => unknown) {
-		return function (x: A[]) {
-			if (x.length === 0) f()
-			return x
-		}
-	},
-	unit,
-
-	zero,
-}
-
-export const asyncArr = {
-	chain: asyncChain_,
-	collect<AccForm, RForm, S>(
-		form: FoldForm<S, AccForm, RForm, AsyncIterableCtx<S>>,
-	) {
-		return function (source: AsyncIterable<S> | Promise<AsyncIterable<S>>) {
-			return asyncCollect(source)(form)
-		}
-	},
-	filter: asyncFilter,
-	map: asyncMap,
-	plus,
-	unit,
-	zero,
+export function collect<AccForm, RForm, S>(
+	form: FoldForm<S, AccForm, RForm, IterableCtx<S>>,
+) {
+	return function (source: Iterable<S>) {
+		return collect_(source)(form)
+	}
 }

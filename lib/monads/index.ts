@@ -1,4 +1,5 @@
+export * as asyncIter from './asyncIter'
 export * from './either'
-export * from './iter'
-export * from './opt'
-export * from './pro'
+export * as iter from './iter'
+export * as opt from './opt'
+export * as pro from './pro'
