@@ -1,10 +1,7 @@
 import { id } from '@constellar/core'
 
+import { cmp0 } from '../../internal'
 import { sortedAdd } from './internal'
-
-function cmp0<T>(a: T, b: T): number {
-	return a < b ? -1 : a > b ? 1 : 0
-}
 
 export function maxSink<T>(cmp = cmp0<T>) {
 	return {

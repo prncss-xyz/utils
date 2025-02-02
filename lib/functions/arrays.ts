@@ -1,27 +1,12 @@
-function cmp0<T>(a: T, b: T): number {
-	return a < b ? -1 : a > b ? 1 : 0
-}
+import { cmp0 } from '../internal'
 
-export function sorted<T>(cmp = cmp0) {
+export function sorted<T>(cmp = cmp0<T>) {
 	return function (acc: T[]) {
 		return [...acc].sort(cmp)
 	}
 }
 
-export function insertSorted<T>(t: T) {
-	return function (acc: T[]) {
-		for (let i = 0; i < acc.length; i++) {
-			const v = acc[i]!
-			const r = cmp0(v, t)
-			if (r < 0) continue
-			if (r === 0) return acc
-			if (r > 0) return acc.slice(0, i).concat([t], acc.slice(i))
-		}
-		return acc.concat(t)
-	}
-}
-
-export function insertCmp<T>(cmp = cmp0) {
+export function insertSorted<T>(cmp = cmp0<T>) {
 	return function (t: T) {
 		return function (acc: T[]) {
 			for (let i = 0; i < acc.length; i++) {
@@ -36,38 +21,10 @@ export function insertCmp<T>(cmp = cmp0) {
 	}
 }
 
-export function insertValue<X>(element: X) {
-	let dirty = true
-	function p(x: X) {
-		if (Object.is(x, element)) dirty = false
-	}
-	return function (xs: X[]) {
-		xs.forEach(p)
-		return dirty ? xs.concat(element) : xs
-	}
-}
-
-// index: array, value | predicate: iterable | array
-
-export function removeValue<X>(element: X) {
+export function filter<X>(predicate: (x: X) => unknown) {
 	let dirty = false
 	function p(x: X) {
-		if (Object.is(x, element)) {
-			dirty = true
-			return false
-		}
-		return true
-	}
-	return function (xs: X[]) {
-		const res = xs.filter(p)
-		return dirty ? res : xs
-	}
-}
-
-export function removeValues<X>(elements: X[]) {
-	let dirty = false
-	function p(x: X) {
-		if (elements.includes(x)) {
+		if (predicate(x)) {
 			dirty = true
 			return false
 		}
@@ -112,4 +69,8 @@ export function remove<T>(index: number) {
 		if (index >= xs.length) return xs
 		return [...xs.slice(0, index), ...xs.slice(index + 1)]
 	}
+}
+
+export function getAt<X>(i: number) {
+	return (xs: X[]) => xs.at(i)
 }
