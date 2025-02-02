@@ -1,4 +1,5 @@
 import { cmp0 } from '../internal'
+import { neq } from './elementary'
 
 export function sorted<T>(cmp = cmp0<T>) {
 	return function (acc: T[]) {
@@ -39,6 +40,10 @@ export function filtered<X>(predicate: (x: X) => unknown) {
 		const res = xs.filter(p)
 		return dirty ? res : xs
 	}
+}
+
+export function filteredValue<X>(element: X) {
+	return filtered<X>(neq(element))
 }
 
 export function symmetricDiff<X>(a: X[], b: X[]) {

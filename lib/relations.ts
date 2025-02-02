@@ -1,29 +1,8 @@
 import { focus, Focus, isUndefined, PRISM, REMOVE } from '@constellar/core'
 
 import { isoAssert } from './assert'
-import { fromInit, Init, neq } from './functions'
-import {
-	filtered,
-	insertSorted,
-	symmetricDiff,
-} from './functions/arrays'
-
-/*
-export function insertValue<X>(element: X) {
-	let dirty = true
-	function p(x: X) {
-		if (Object.is(x, element)) dirty = false
-	}
-	return function (xs: X[]) {
-		xs.forEach(p)
-		return dirty ? xs.concat(element) : xs
-	}
-}
-*/
-
-export function removeValue<X>(element: X) {
-	return filtered<X>(neq(element))
-}
+import { fromInit, Init } from './functions'
+import { filteredValue, insertSorted, symmetricDiff } from './functions/arrays'
 
 export type NonRemove<T> = T extends typeof REMOVE ? never : T
 
@@ -175,7 +154,7 @@ export function manyToMany<SValue, TValue, SKey, TKey, Fail, Command, IS_PRISM>(
 			getTargetIdsResolved(next),
 		)
 		parentsOut.forEach((parentOut) =>
-			target.map(parentOut, resolved.update(removeValue(key))),
+			target.map(parentOut, resolved.update(filteredValue(key))),
 		)
 		parentsIn.forEach((parentIn) =>
 			target.map(parentIn, resolved.update(insertSorted(key))),
@@ -201,9 +180,9 @@ export function oneToMany<SValue, TValue, SKey, TKey, Fail, Command, IS_PRISM>(
 		const parentIn = getTargetIdResolved(next)
 		if (parentIn === parentOut) return
 		if (parentOut !== undefined)
-			target.map(parentOut, resolved.update(removeValue(key)))
+			target.map(parentOut, resolved.update(filteredValue(key)))
 		if (parentIn !== undefined)
-			target.map(parentIn, resolved.update(insertValue(key)))
+			target.map(parentIn, resolved.update(insertSorted(key)))
 	})
 	return resolved.view.bind(resolved)
 }
