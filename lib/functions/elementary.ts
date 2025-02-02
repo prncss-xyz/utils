@@ -45,6 +45,7 @@ export function eqWith<A, B>(m: (a: A) => B) {
 	}
 }
 
+// remove?
 export function sort<X>(cmp?: (a: X, b: X) => number) {
 	return function (xs: X[]) {
 		const ys = xs.slice()
@@ -53,8 +54,13 @@ export function sort<X>(cmp?: (a: X, b: X) => number) {
 	}
 }
 
+// remove?
 export function join(sep?: string) {
 	return function <X>(xs: X[]) {
 		return xs.join(sep)
 	}
+}
+
+export function getProp<T, K extends keyof T>(k: K) {
+	return (o: T) => o[k]
 }

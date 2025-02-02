@@ -2,6 +2,12 @@ function cmp0<T>(a: T, b: T): number {
 	return a < b ? -1 : a > b ? 1 : 0
 }
 
+export function sorted<T>(cmp = cmp0) {
+	return function (acc: T[]) {
+		return [...acc].sort(cmp)
+	}
+}
+
 export function insertSorted<T>(t: T) {
 	return function (acc: T[]) {
 		for (let i = 0; i < acc.length; i++) {
@@ -41,6 +47,8 @@ export function insertValue<X>(element: X) {
 	}
 }
 
+// index: array, value | predicate: iterable | array
+
 export function removeValue<X>(element: X) {
 	let dirty = false
 	function p(x: X) {
@@ -76,4 +84,32 @@ export function symmetricDiff<X>(a: X[], b: X[]) {
 		a.filter((x) => !b.includes(x)),
 		b.filter((x) => !a.includes(x)),
 	] as const
+}
+
+export function insert<T>(index: number, x: T) {
+	return function (xs: T[]) {
+		if (index < 0) index += xs.length
+		if (index < 0) return xs
+		if (index > xs.length) return xs
+		return [...xs.slice(0, index), x, ...xs.slice(index)]
+	}
+}
+
+export function replace<T>(x: T, index: number) {
+	return function (xs: T[]) {
+		if (index < 0) index += xs.length
+		if (index < 0) return xs
+		if (index >= xs.length) return xs
+		if (Object.is(xs[index], x)) return xs
+		return [...xs.slice(0, index), x, ...xs.slice(index + 1)]
+	}
+}
+
+export function remove<T>(index: number) {
+	return function (xs: T[]) {
+		if (index < 0) index += xs.length
+		if (index < 0) return xs
+		if (index >= xs.length) return xs
+		return [...xs.slice(0, index), ...xs.slice(index + 1)]
+	}
 }
