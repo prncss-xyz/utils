@@ -1,7 +1,15 @@
-import { focus, Focus, isUndefined, PRISM, REMOVE } from '@constellar/core'
+import {
+	focus,
+	Focus,
+	isUndefined,
+	pipe,
+	pipe2,
+	PRISM,
+	REMOVE,
+} from '@constellar/core'
 
 import { isoAssert } from './assert'
-import { fromInit, Init } from './functions'
+import { fromInit, Init, not } from './functions'
 import { insertValue, removeValue, symmetricDiff } from './functions/arrays'
 
 export type NonRemove<T> = T extends typeof REMOVE ? never : T
@@ -67,6 +75,27 @@ export function oneToOne<SValue, TValue, SKey, TKey, Fail, IS_PRISM, Command>(
 	return resolved.view.bind(resolved)
 }
 
+export function oneToIndex<SValue, SKey>(
+	source: ICategory<SKey, SValue>,
+	getTargetId: (v: SValue) => unknown,
+	target: ICategoryPutRemove<SKey, true>,
+) {
+	function getTargetIdResolved(source: SValue | undefined) {
+		if (isUndefined(source)) return undefined
+		return getTargetId(source)
+	}
+	source.subscribe((event) => {
+		const { key, last, next } = event
+		const parentOut = getTargetIdResolved(last)
+		const parentIn = getTargetIdResolved(next)
+		if (parentIn === parentOut) return
+		if (parentIn) target.put(key, true)
+		else target.remove(key)
+	})
+	return getTargetId
+}
+
+// FIXME: does it makes sense
 export function manyToOne<SValue, TValue, SKey, TKey, Fail, Command>(
 	source: ICategory<SKey, SValue>,
 	getTargetIds: Init<TKey[], [SValue]>,

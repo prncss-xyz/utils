@@ -1,7 +1,8 @@
 import { customAlphabet } from 'nanoid/non-secure'
 
+// mostly base64, with `-` and `_` instead of `/` and `+` to be make it usable as a filename or a url
 const base64 =
-	'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+	'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-'
 const seqN = 3 // number of characters in the sequential part of the UUID
 const seqMax = base64.length ** seqN // max value for the sequential part
 
