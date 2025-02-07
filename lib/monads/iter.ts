@@ -9,6 +9,13 @@ export function zero<A>(): A[] {
 	return []
 }
 
+export function tapZero<T>(f: () => unknown) {
+	return function (x: T[]) {
+		if (x.length === 0) f()
+		return x
+	}
+}
+
 function* _mapIter<TFrom, TTo>(
 	mapper: (a: TFrom, index: number, source: Iterable<TFrom>) => TTo,
 	source: Iterable<TFrom>,

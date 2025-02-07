@@ -89,3 +89,9 @@ export function bind<O, K extends keyof O>(o: O, method: K) {
 		return (o[method] as any)(a)
 	}
 }
+
+export function negate<T>(f: (v: T) => unknown) {
+	return function (v: T) {
+		return !f(v)
+	}
+}

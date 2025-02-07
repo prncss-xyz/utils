@@ -1,4 +1,5 @@
-import { insert, remove, replace } from './arrays'
+import { filtered, filteredValue, insert, remove, replace } from './arrays'
+import { lt } from './elementary'
 
 describe('insert', () => {
 	it('inserts an element', () => {
@@ -40,5 +41,17 @@ describe('remove', () => {
 	it('keeps the reference when possible', () => {
 		const xs = [0, 1, 2]
 		expect(remove(4)(xs)).toBe(xs)
+	})
+})
+
+describe('filtered', () => {
+	it('filters an array', () => {
+		expect(filtered(lt(2))([1, 2, 0, 4])).toEqual([1, 0])
+	})
+})
+
+describe('filteredValue', () => {
+	it('removes a value', () => {
+		expect(filteredValue(0)([1, 2, 0, 4])).toEqual([1, 2, 4])
 	})
 })

@@ -97,8 +97,8 @@ export function filter<TFrom>(
 	}
 }
 
-function plus<A>(as: Array<A>, a: A) {
-	return Array.prototype.concat(as, a)
+function plus<T>(ts: Array<T>, a: T) {
+	return Array.prototype.concat(ts, a)
 }
 
 export function multi<N, R>(
@@ -122,8 +122,8 @@ export function multi<N, R>(
 	}
 }
 
-export function* pick<A>(as: Init<AsyncIterable<A>>) {
-	return (yield as) as A
+export function* pick<T>(ts: Init<AsyncIterable<T>>) {
+	return (yield ts) as T
 }
 
 export async function* effect<T>(eff: () => Promise<T>) {

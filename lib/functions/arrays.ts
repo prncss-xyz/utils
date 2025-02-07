@@ -32,9 +32,9 @@ export function filtered<X>(predicate: (x: X) => unknown) {
 	function p(x: X) {
 		if (predicate(x)) {
 			dirty = true
-			return false
+			return true
 		}
-		return true
+		return false
 	}
 	return function (xs: X[]) {
 		const res = xs.filter(p)
