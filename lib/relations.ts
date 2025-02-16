@@ -69,17 +69,17 @@ export function oneToOne<SValue, TValue, SKey, TKey, Fail, IS_PRISM, Command>(
 
 export function oneToIndex<SValue, SKey>(
 	source: ICategory<SKey, SValue>,
-	getTargetId: (v: SValue, k: SKey) => unknown,
+	getTargetId: (v: SValue) => unknown,
 	target: ICategoryPutRemove<SKey, true>,
 ) {
-	function getTargetIdResolved(source: SValue | undefined, key: SKey) {
+	function getTargetIdResolved(source: SValue | undefined) {
 		if (isUndefined(source)) return undefined
-		return getTargetId(source, key)
+		return getTargetId(source)
 	}
 	source.subscribe((event) => {
 		const { key, last, next } = event
-		const parentOut = getTargetIdResolved(last, key)
-		const parentIn = getTargetIdResolved(next, key)
+		const parentOut = getTargetIdResolved(last)
+		const parentIn = getTargetIdResolved(next)
 		if (parentIn === parentOut) return
 		if (parentIn) target.put(key, true)
 		else target.remove(key)
