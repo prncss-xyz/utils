@@ -6,16 +6,16 @@ import { filteredValue, insertSorted, symmetricDiff } from './functions/arrays'
 
 export type NonRemove<T> = T extends typeof REMOVE ? never : T
 
-interface ICategoryEvent<K, V> {
+export interface ICategoryEvent<K, V> {
 	key: K
 	last: undefined | V
 	next: undefined | V
 }
-interface ICategory<K, V> {
+export interface ICategory<K, V> {
 	map(key: K, cb: (value: V) => V): void
 	subscribe(listener: (event: ICategoryEvent<K, V>) => void): void
 }
-interface ICategoryPutRemove<K, V> extends ICategory<K, V> {
+export interface ICategoryPutRemove<K, V> extends ICategory<K, V> {
 	put(key: K, value: V): void
 	remove(key: K): void
 }
@@ -69,17 +69,17 @@ export function oneToOne<SValue, TValue, SKey, TKey, Fail, IS_PRISM, Command>(
 
 export function oneToIndex<SValue, SKey>(
 	source: ICategory<SKey, SValue>,
-	getTargetId: (v: SValue) => unknown,
+	getTargetId: (v: SValue, k: SKey) => unknown,
 	target: ICategoryPutRemove<SKey, true>,
 ) {
-	function getTargetIdResolved(source: SValue | undefined) {
+	function getTargetIdResolved(source: SValue | undefined, key: SKey) {
 		if (isUndefined(source)) return undefined
-		return getTargetId(source)
+		return getTargetId(source, key)
 	}
 	source.subscribe((event) => {
 		const { key, last, next } = event
-		const parentOut = getTargetIdResolved(last)
-		const parentIn = getTargetIdResolved(next)
+		const parentOut = getTargetIdResolved(last, key)
+		const parentIn = getTargetIdResolved(next, key)
 		if (parentIn === parentOut) return
 		if (parentIn) target.put(key, true)
 		else target.remove(key)
