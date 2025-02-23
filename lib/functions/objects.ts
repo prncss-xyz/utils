@@ -42,3 +42,9 @@ export function invertMulti<K extends PropertyKey, V extends PropertyKey>(
 	}
 	return acc
 }
+
+export function objMap<K extends string, V, T>(fn: (v: V, k: K, obj: Record<K, V>) => T) {
+	return function (obj: Record<K, V>) {
+		return Object.fromEntries(Object.entries<V>(obj).map(([k, v]) => [k, fn(v, k as K, obj)]))
+	}
+}

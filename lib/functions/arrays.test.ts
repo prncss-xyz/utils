@@ -47,11 +47,13 @@ describe('remove', () => {
 describe('filtered', () => {
 	it('filters an array', () => {
 		expect(filtered(lt(2))([1, 2, 0, 4])).toEqual([1, 0])
+		expect(filtered(lt(2))([2])).toEqual([])
 	})
 })
 
 describe('filteredValue', () => {
 	it('removes a value', () => {
 		expect(filteredValue(0)([1, 2, 0, 4])).toEqual([1, 2, 4])
+		expect(filteredValue(0)([0])).toEqual([])
 	})
 })

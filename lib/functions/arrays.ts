@@ -31,9 +31,9 @@ export function filtered<X>(predicate: (x: X) => unknown) {
 	let dirty = false
 	function p(x: X) {
 		if (predicate(x)) {
-			dirty = true
 			return true
 		}
+		dirty = true
 		return false
 	}
 	return function (xs: X[]) {

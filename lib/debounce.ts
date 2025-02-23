@@ -27,3 +27,8 @@ export function getDebouncedDeduped<T>(cb: (arg: T) => void, delay?: number) {
 		handle = setTimeout(eff, delay)
 	}
 }
+
+export function timed(delay: number) {
+	return new Promise((resolve) => setTimeout(resolve, delay))
+}
+

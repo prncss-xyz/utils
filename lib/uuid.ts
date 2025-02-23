@@ -18,14 +18,14 @@ function encode(n: number) {
 	return acc
 }
 
-const rand = customAlphabet(base64, 10)
+const rand = customAlphabet(base64, 12)
 
 function getFactory() {
 	let count = Math.floor(Math.random() * seqMax)
 	return function () {
 		count++
 		if (count >= seqMax) count = 0
-		return encode(count) + rand()
+		return  encode(count) + rand()
 	}
 }
 
