@@ -27,6 +27,30 @@ export function zip<A, B, Acc, Index, Ctx extends BaseCtx<unknown, unknown>>(
 	}
 }
 
+export function concat<A, B, Acc, Index, Ctx extends BaseCtx<unknown, unknown>>(
+	unfold: Source<B, Acc, Index>,
+): Transducer<Ctx, A, A | B> {
+	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
+		return function ({ foldFn, result }) {
+			return p({
+				foldFn,
+				result(acc, ctx) {
+					let [unAcc, index] = unfold.init
+					let value: B
+					while (true) {
+						const r = unfold.step(unAcc, index)
+						if (r === undefined) break
+						;[value, unAcc, index] = r
+						const innerCtx = { ...ctx, index, unAcc }
+						acc = foldFn(value, acc, innerCtx)
+					}
+					return result(acc, ctx)
+				},
+			})
+		}
+	}
+}
+
 export function zipCmp<A, B, Acc, Index, Ctx extends BaseCtx<unknown, unknown>>(
 	unfold: Source<B, Acc, Index>,
 	cmp: (a: A, b: B) => number,
@@ -63,30 +87,6 @@ export function zipCmp<A, B, Acc, Index, Ctx extends BaseCtx<unknown, unknown>>(
 						const innerCtx = { ...ctx, index, unAcc }
 						acc = foldFn([undefined, value], acc, innerCtx)
 						r = unfold.step(unAcc, index)
-					}
-					return result(acc, ctx)
-				},
-			})
-		}
-	}
-}
-
-export function concat<A, Ctx, Index extends BaseCtx<Index, Acc>, B, Acc>(
-	unfold: Source<B, Acc, Index>,
-): Transducer<Ctx, A, A | B> {
-	return function <S>(p: ResolvedTransducer<S, A, Ctx>) {
-		return function ({ foldFn, result }) {
-			return p({
-				foldFn,
-				result(acc, ctx) {
-					let [unAcc, index] = unfold.init
-					let value: B
-					while (true) {
-						const r = unfold.step(unAcc, index)
-						if (r === undefined) break
-						;[value, unAcc, index] = r
-						const innerCtx = { ...ctx, index, unAcc }
-						acc = foldFn(value, acc, innerCtx)
 					}
 					return result(acc, ctx)
 				},

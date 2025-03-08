@@ -1,13 +1,13 @@
 import { focus, id } from '@constellar/core'
 
-import { fromInit, Init, not } from './functions'
+import { add, fromInit, Init, not } from './functions'
 import {
 	ICategoryEvent,
 	ICategoryPutRemove,
 	manyToMany,
 	oneToIndex,
 	oneToMany,
-    oneToOne,
+	oneToOne,
 } from './relations'
 
 function mapCategory<K, V>(init: Init<V, []> | undefined = undefined) {
@@ -67,6 +67,53 @@ describe('oneToIndex', () => {
 	})
 })
 
+function times(n: number) {
+	let res = ''
+	for (let i = 0; i < n; i++) res += i % 10
+	return res
+}
+
+describe('oneToOne', () => {
+	describe.todo('Removable', () => {
+		const source = mapCategory<boolean, number>()
+		const target = mapCategory<string, boolean>()
+		oneToOne(source, times, target, id)
+		test('propagates', () => {
+			expect(Array.from(source.contents.values())).toEqual([])
+			expect(Array.from(target.contents.keys())).toEqual([])
+			source.put(true, 1)
+			source.put(false, 2)
+			// creation
+			expect(Array.from(target.contents.keys())).toEqual(['0', '01'])
+			// deletion
+			source.remove(false)
+			expect(Array.from(target.contents.keys())).toEqual(['0'])
+			// modification
+			source.map(true, add(3))
+			expect(Array.from(target.contents.keys())).toEqual(['0123'])
+		})
+	})
+	describe('NonRemovable', () => {
+		const source = mapCategory<boolean, number>()
+		const target = mapCategory<string, boolean>()
+		oneToOne(source, times, target, id)
+		test('propagates', () => {
+			expect(Array.from(source.contents.values())).toEqual([])
+			expect(Array.from(target.contents.keys())).toEqual([])
+			source.put(true, 1)
+			source.put(false, 2)
+			// creation
+			expect(Array.from(target.contents.keys())).toEqual(['0', '01'])
+			// deletion
+			source.remove(false)
+			expect(Array.from(target.contents.keys())).toEqual(['0'])
+			// modification
+			source.map(true, add(3))
+			expect(Array.from(target.contents.keys())).toEqual(['0123'])
+		})
+	})
+})
+
 describe('manyToMany', () => {
 	const source = mapCategory<number, string[]>()
 	const index = mapCategory<string, number[]>(() => [])
@@ -98,9 +145,14 @@ describe('oneToMany', () => {
 		expect(index.get('a')).toEqual([1])
 		source.put(2, 'a')
 		expect(index.get('a')).toEqual([1, 2])
+		source.put(2, 'b')
+		expect(index.get('a')).toEqual([1])
+		expect(index.get('b')).toEqual([2])
 		source.remove(1)
-    expect(index.get('a')).toEqual([2])
-    source.remove(2)
 		expect(index.get('a')).toEqual([])
+		expect(index.get('b')).toEqual([2])
+		source.remove(2)
+		expect(index.get('a')).toEqual([])
+		expect(index.get('b')).toEqual([])
 	})
 })

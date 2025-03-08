@@ -6,6 +6,11 @@ import { group, scan } from './scan-like'
 
 describe('group', () => {
 	test('default form', () => {
+		const res = collect(range(0, 0), group(eqWith(iDiv(2))))(arraySinkDest())
+		expect(res).toEqual([])
+		expectTypeOf(res).toEqualTypeOf<number[][]>()
+	})
+	test('default form', () => {
 		const res = collect(range(0, 6), group(eqWith(iDiv(2))))(arraySinkDest())
 		expect(res).toEqual([
 			[0, 1],

@@ -1,8 +1,8 @@
-import { arraySink } from '../sinks'
+import { arraySinkDest } from '../sinks'
 import { FoldForm, ResolvedTransducer, Transducer } from '../transductions'
 
 export function scan<R, Acc, Ctx, T>(
-	form: FoldForm<T, Acc, R, Ctx & { index: number }> = arraySink<
+	form: FoldForm<T, Acc, R, Ctx & { index: number }> = arraySinkDest<
 		T,
 		Ctx & { index: number }
 	>() as any,
@@ -34,7 +34,7 @@ export function group<T, R, Acc, Ctx>(
 ): Transducer<Ctx, T, R>
 export function group<T, R, Acc, Ctx>(
 	eq: (next: T, last: T, ctx: Ctx) => unknown,
-	form: FoldForm<T, Acc, R, Ctx & { index: number }> = arraySink<
+	form: FoldForm<T, Acc, R, Ctx & { index: number }> = arraySinkDest<
 		T,
 		Ctx & { index: number }
 	>() as any,
@@ -43,7 +43,7 @@ export function group<T, R, Acc, Ctx>(
 		return function ({ foldFn, result }) {
 			let innerAcc = form.init()
 			let last: T | undefined
-			let innerCtx: Ctx & { index: number }
+			let innerCtx: (Ctx & { index: number }) | undefined = undefined
 			return p({
 				foldFn(next, acc, ctx) {
 					innerCtx ??= { ...ctx, index: 0 }

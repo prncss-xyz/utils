@@ -48,6 +48,19 @@ export function objSink<T, Index extends PropertyKey, Ctx>(): FoldForm<
 	}
 }
 
+export function fromEntriesSinkDest<K extends string, T, Ctx>(): FoldForm<
+	[K, T],
+	Record<K, T>,
+	Record<K, T>,
+	Ctx
+> {
+	return {
+		foldFn: ([k, v], acc) => ((acc[k] = v), acc),
+		init: () => ({} as any),
+		result: id,
+	}
+}
+
 export function arraySinkDest<T, Ctx>(): FoldForm<T, T[], T[], Ctx> {
 	return {
 		foldFn: (t, acc) => (acc.push(t), acc),

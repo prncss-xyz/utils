@@ -22,6 +22,10 @@ describe('filter', () => {
 
 describe('take', () => {
 	test('', () => {
+		const res = collect(range(0, 10), take(0))(arraySinkDest())
+		expect(res).toEqual([])
+	})
+	test('', () => {
 		const res = collect(range(0, 10), take(4))(arraySinkDest())
 		expect(res).toEqual([0, 1, 2, 3])
 	})

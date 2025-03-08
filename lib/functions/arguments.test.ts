@@ -1,4 +1,4 @@
-import { curry, flip, fromInit, Init, uncurry } from '.'
+import { bind, curry, eq, flip, fromInit, Init, negate, uncurry } from '.'
 
 describe('uncurry', () => {
 	test('', () => {
@@ -32,9 +32,23 @@ describe('curry', () => {
 	})
 })
 
+describe('bind', () => {
+	test('', () => {
+		const indexOf = bind('abc', 'indexOf')
+		expect(indexOf('b')).toBe(1)
+	})
+})
+
 describe('flip', () => {
 	test('', () => {
 		const flipped = flip((x: number, y: number) => x - y)
 		expect(flipped(3, 4)).toBe(1)
+	})
+})
+
+describe('negate', () => {
+	test('', () => {
+		const n = negate(eq(3))
+		expect(n(3)).toBeFalsy()
 	})
 })

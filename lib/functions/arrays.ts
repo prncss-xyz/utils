@@ -1,12 +1,6 @@
 import { cmp0 } from '../internal'
 import { neq } from './elementary'
 
-export function sorted<T>(cmp = cmp0<T>) {
-	return function (acc: T[]) {
-		return [...acc].sort(cmp)
-	}
-}
-
 // this provides better type inference
 export function insertSorted<T>(t: T) {
 	return insertCmp(cmp0)(t)
@@ -24,31 +18,6 @@ export function insertCmp<T>(cmp = cmp0<T>) {
 			}
 			return acc.concat(t)
 		}
-	}
-}
-
-export function filtered<X>(predicate: (x: X) => unknown) {
-	let dirty = false
-	function p(x: X) {
-		if (predicate(x)) {
-			return true
-		}
-		dirty = true
-		return false
-	}
-	return function (xs: X[]) {
-		const res = xs.filter(p)
-		return dirty ? res : xs
-	}
-}
-
-export function filteredValue<X>(element: X) {
-	return filtered<X>(neq(element))
-}
-
-export function included<X>(elements: X[]) {
-	return function (x: X) {
-		return elements.includes(x)
 	}
 }
 
@@ -87,6 +56,43 @@ export function remove<T>(index: number) {
 	}
 }
 
-export function getAt<X>(i: number) {
+export function fromIndex<X>(i: number) {
 	return (xs: X[]) => xs.at(i)
+}
+
+export function sorted<X>(cmp?: (a: X, b: X) => number) {
+	return function (xs: X[]) {
+		return [...xs].sort(cmp)
+	}
+}
+
+export function filtered<X>(predicate: (x: X) => unknown) {
+	let dirty = false
+	function p(x: X) {
+		if (predicate(x)) {
+			return true
+		}
+		dirty = true
+		return false
+	}
+	return function (xs: X[]) {
+		const res = xs.filter(p)
+		return dirty ? res : xs
+	}
+}
+
+export function filteredValue<X>(element: X) {
+	return filtered<X>(neq(element))
+}
+
+export function join(sep?: string) {
+	return function <X>(xs: X[]) {
+		return xs.join(sep)
+	}
+}
+
+export function included<X>(elements: X[]) {
+	return function (x: X) {
+		return elements.includes(x)
+	}
 }

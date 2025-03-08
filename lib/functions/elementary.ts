@@ -1,12 +1,3 @@
-/* function curry<A, B>(f: (a: A, b: B) => unknown) {
-	return function (a: A) {
-		return function (b: B) {
-			return f(a, b)
-		}
-	}
-}
-*/
-
 import { curry } from "./arguments"
 
 export const mul = curry((a: number, b: number) => b * a)
@@ -52,24 +43,4 @@ export function eqWith<A, B>(m: (a: A) => B) {
 	return function (a: A, b: A) {
 		return Object.is(m(a), m(b))
 	}
-}
-
-// remove?
-export function sort<X>(cmp?: (a: X, b: X) => number) {
-	return function (xs: X[]) {
-		const ys = xs.slice()
-		ys.sort(cmp)
-		return ys
-	}
-}
-
-// remove?
-export function join(sep?: string) {
-	return function <X>(xs: X[]) {
-		return xs.join(sep)
-	}
-}
-
-export function getProp<T, K extends keyof T>(k: K) {
-	return (o: T) => o[k]
 }

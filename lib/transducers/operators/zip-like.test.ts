@@ -2,7 +2,7 @@ import { sub } from '../../functions'
 import { arraySinkDest } from '../sinks'
 import { arraySource, rangeSource } from '../sources'
 import { collectSink } from '../transductions/sinks'
-import { zip, zipCmp } from './zip-like'
+import { concat, zip, zipCmp } from './zip-like'
 
 describe('zip', () => {
 	test('shorter, right', () => {
@@ -75,6 +75,27 @@ describe('zipCmp', () => {
 			[0, 0],
 			[1, 1],
 			[2, undefined],
+		])
+	})
+})
+
+describe('concat', () => {
+	test('shorter, right', () => {
+		const res = collectSink(
+			rangeSource(0, 3),
+			concat(arraySource(['a', 'b'])),
+		)(arraySinkDest())
+		expect(res).toEqual([0, 1, 2, 'a', 'b'])
+	})
+	test('shorter, left', () => {
+		const res = collectSink(
+			rangeSource(0, 4),
+			zip(rangeSource(1, 4)),
+		)(arraySinkDest())
+		expect(res).toEqual([
+			[0, 1],
+			[1, 2],
+			[2, 3],
 		])
 	})
 })
