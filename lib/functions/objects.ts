@@ -53,7 +53,7 @@ export function objMap<K extends string, V, T>(
 	}
 }
 
-export function fromProp<K extends string>(k: K) {
+export function fromProp<K extends PropertyKey>(k: K) {
 	return function <O extends { [k in K]?: unknown }>(o: O) {
 		return o[k]
 	}
